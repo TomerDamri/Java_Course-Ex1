@@ -1,8 +1,5 @@
 package course.java.sdm.engine.Schema;
 
-import course.java.sdm.engine.Utils.Mapper;
-import examples.jaxb.schema.generated.SuperDuperMarketDescriptor;
-
 public class Descriptor {
 
     protected Items items;
@@ -27,13 +24,5 @@ public class Descriptor {
 
     public void setStores(Stores stores) {
         this.stores = stores;
-    }
-
-    @Override
-    public String toString() {
-        return "Descriptor{" +
-                "sdmItems=" + items.toString() +
-                ", sdmStores=" + stores.toString() +
-                '}';
     }
 }

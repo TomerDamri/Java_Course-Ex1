@@ -1,36 +1,20 @@
 package course.java.sdm.engine.Schema;
 
-import course.java.sdm.engine.Utils.Mapper;
-import examples.jaxb.schema.generated.SDMPrices;
-import examples.jaxb.schema.generated.SDMSell;
-
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class Prices {
 
-    private Map<Integer, Sell> sdmSells;
+    private Map<Integer, Sell> sells;
 
-    public Prices(Map<Integer, Sell> sdmSells) {
-        this.sdmSells = sdmSells;
+    public Prices(Map<Integer, Sell> sells) {
+        this.sells = sells;
     }
 
-
-
-    public Map<Integer, Sell> getSdmSells() {
-        return sdmSells;
+    public Map<Integer, Sell> getSells() {
+        return sells;
     }
 
-    public void setSdmSells(Map<Integer, Sell> sdmSells) {
-        this.sdmSells = sdmSells;
+    public void setSells(Map<Integer, Sell> sells) {
+        this.sells = sells;
     }
-
-//    // TODO: 07/08/2020 - change the toString implementation
-//    @Override
-//    public String toString() {
-//        return "Prices{" +
-//                "sdmSells=" + sdmSells +
-//                '}';
-//    }
 }

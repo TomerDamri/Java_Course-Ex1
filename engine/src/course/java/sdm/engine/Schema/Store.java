@@ -1,6 +1,9 @@
 package course.java.sdm.engine.Schema;
 
 
+import course.java.sdm.engine.Utils.Mapper;
+import examples.jaxb.schema.generated.SDMStore;
+
 public class Store {
 
     private String name;
