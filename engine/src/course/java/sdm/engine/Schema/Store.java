@@ -10,11 +10,11 @@ public class Store {
     private int id;
 
     public Store(String name, int deliveryPpk, Location location, Prices prices, int id) {
+        this.id = id;
         this.name = name;
         this.deliveryPpk = deliveryPpk;
         this.location = location;
         this.prices = prices;
-        this.id = id;
     }
 
     public String getName() {
