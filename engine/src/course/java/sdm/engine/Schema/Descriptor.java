@@ -13,10 +13,6 @@ public class Descriptor {
         this.stores = stores;
     }
 
-    public Descriptor(SuperDuperMarketDescriptor generatedDescriptor){
-        new Descriptor(Mapper.mapToItems(generatedDescriptor.getSDMItems()), Mapper.mapToStores(generatedDescriptor.getSDMStores()));
-    }
-
     public Items getItems() {
         return items;
     }
@@ -33,11 +29,11 @@ public class Descriptor {
         this.stores = stores;
     }
 
-    @Override
-    public String toString() {
-        return "Descriptor{" +
-                "sdmItems=" + items.toString() +
-                ", sdmStores=" + stores.toString() +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Descriptor{" +
+//                "sdmItems=" + items.toString() +
+//                ", sdmStores=" + stores.toString() +
+//                '}';
+//    }
 }

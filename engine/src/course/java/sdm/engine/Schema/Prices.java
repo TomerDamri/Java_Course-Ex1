@@ -16,14 +16,7 @@ public class Prices {
         this.sdmSells = sdmSells;
     }
 
-    // if id duplication exist,toMap method will throw IllegalStateException (link: https://www.baeldung.com/java-list-to-map)
-    public Prices(SDMPrices generatedPrices) {
-            Map<Integer, Sell> map = generatedPrices.getSDMSell().stream().filter(Objects::nonNull).collect(Collectors.toMap(SDMSell::getItemId, Mapper::mapToSell));
-            if(map.keySet().size() != generatedPrices.getSDMSell().size()){
-//                throw appropriate exception
-            }
-            new Prices(map);
-    }
+
 
     public Map<Integer, Sell> getSdmSells() {
         return sdmSells;
@@ -33,11 +26,11 @@ public class Prices {
         this.sdmSells = sdmSells;
     }
 
-    // TODO: 07/08/2020 - change the toString implementation
-    @Override
-    public String toString() {
-        return "Prices{" +
-                "sdmSells=" + sdmSells +
-                '}';
-    }
+//    // TODO: 07/08/2020 - change the toString implementation
+//    @Override
+//    public String toString() {
+//        return "Prices{" +
+//                "sdmSells=" + sdmSells +
+//                '}';
+//    }
 }

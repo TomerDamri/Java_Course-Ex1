@@ -4,69 +4,96 @@ import course.java.sdm.engine.Schema.*;
 import course.java.sdm.engine.Schema.Location;
 import examples.jaxb.schema.generated.*;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 public class Mapper {
 
-    public static  Descriptor mapToDescriptor(SuperDuperMarketDescriptor generatedDescriptor){
+    public  Descriptor mapToDescriptor(SuperDuperMarketDescriptor generatedDescriptor){
         if(generatedDescriptor == null){
             return null;
         }
 
-        return new Descriptor(generatedDescriptor);
+        return new Descriptor(mapToItems(generatedDescriptor.getSDMItems()), mapToStores(generatedDescriptor.getSDMStores()));
     }
 
-    public static Location mapToLocation(examples.jaxb.schema.generated.Location generatedLocation){
+    private Location mapToLocation(examples.jaxb.schema.generated.Location generatedLocation){
         if(generatedLocation == null){
             return null;
         }
 
-        return new Location(generatedLocation);
+        return  new Location(generatedLocation.getX(), generatedLocation.getY());
     }
 
-    public static Item mapToItem(SDMItem generatedItem){
+    private Item mapToItem(SDMItem generatedItem){
         if(generatedItem == null){
             return null;
         }
 
-        return new Item(generatedItem);
+        return new Item(generatedItem.getName(), generatedItem.getPurchaseCategory(), generatedItem.getId());
     }
 
-    public static Items mapToItems(SDMItems generatedItems){
+    private Items mapToItems(SDMItems generatedItems){
         if(generatedItems == null){
             return null;
         }
 
-        return new Items(generatedItems);
+        // if id duplication exist,toMap method will throw IllegalStateException (link: https://www.baeldung.com/java-list-to-map)
+        Map<Integer, Item> map = generatedItems.getSDMItem().stream().filter(Objects::nonNull)
+                .collect(Collectors.toMap(x -> x.getId(), x -> mapToItem(x)));
+        if(map.keySet().size() != generatedItems.getSDMItem().size()){
+//                throw appropriate exception
+        }
+        return new Items(map);
     }
 
-    public static Sell mapToSell(SDMSell generatedSell){
+
+    private Sell mapToSell(SDMSell generatedSell){
         if(generatedSell == null){
             return null;
         }
 
-        return new Sell(generatedSell);
+        return new Sell(generatedSell.getPrice(), generatedSell.getItemId());
     }
 
-    public static Prices mapToPrices(SDMPrices generatedPrices){
+    private Prices mapToPrices(SDMPrices generatedPrices){
         if(generatedPrices == null){
             return null;
         }
 
-        return new Prices(generatedPrices);
+        // if id duplication exist,toMap method will throw IllegalStateException (link: https://www.baeldung.com/java-list-to-map)
+        Map<Integer, Sell> map = generatedPrices.getSDMSell().stream().filter(Objects::nonNull).collect(Collectors.toMap(SDMSell::getItemId, this::mapToSell));
+        if(map.keySet().size() != generatedPrices.getSDMSell().size()){
+//                throw appropriate exception
+        }
+        return new Prices(map);
     }
 
-    public static Store mapToStore(SDMStore generatedStore){
+    private Store mapToStore(SDMStore generatedStore){
         if(generatedStore == null){
             return null;
         }
 
-        return new Store(generatedStore);
+        return new Store(generatedStore.getName(),
+                generatedStore.getDeliveryPpk(),
+                mapToLocation(generatedStore.getLocation()),
+                mapToPrices(generatedStore.getSDMPrices()),
+                generatedStore.getId());
     }
 
-    public static Stores mapToStores(SDMStores generatedStores){
+    private Stores mapToStores(SDMStores generatedStores){
         if(generatedStores == null){
             return null;
         }
 
-        return new Stores(generatedStores);
+        // if id duplication exist,toMap method will throw IllegalStateException (link: https://www.baeldung.com/java-list-to-map)
+        Map<Integer, Store> map = generatedStores.getSDMStore().stream().filter(Objects::nonNull)
+                .collect(Collectors.toMap(SDMStore::getId, this::mapToStore));
+        if(map.keySet().size() != generatedStores.getSDMStore().size()){
+//                throw appropriate exception
+        }
+        return new Stores(map);
     }
 }

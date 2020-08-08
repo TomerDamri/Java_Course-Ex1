@@ -12,10 +12,6 @@ public class Sell {
         this.itemId = itemId;
     }
 
-    public Sell(SDMSell generatedSell) {
-        new Sell(generatedSell.getPrice(), generatedSell.getItemId());
-    }
-
     public int getPrice() {
         return price;
     }
@@ -32,11 +28,11 @@ public class Sell {
         this.itemId = itemId;
     }
 
-    @Override
-    public String toString() {
-        return "Sell{" +
-                "price=" + price +
-                ", itemId=" + itemId +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Sell{" +
+//                "price=" + price +
+//                ", itemId=" + itemId +
+//                '}';
+//    }
 }

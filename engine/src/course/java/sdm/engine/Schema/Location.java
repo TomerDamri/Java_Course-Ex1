@@ -12,11 +12,6 @@ public class Location {
         }
         this.x = x;
         this.y = y;
-
-    }
-
-    public Location(examples.jaxb.schema.generated.Location generatedLocation) {
-        new Location(generatedLocation.getX(), generatedLocation.getY());
     }
 
     public int getY() {
@@ -35,13 +30,13 @@ public class Location {
         this.x = x;
     }
 
-    @Override
-    public String toString() {
-        return "Location{" +
-                "y=" + y +
-                ", x=" + x +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Location{" +
+//                "y=" + y +
+//                ", x=" + x +
+//                '}';
+//    }
 
     private boolean isValidLocation(int x, int y) {
         return isaValidValue(x) && isaValidValue(y);

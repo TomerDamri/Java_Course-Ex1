@@ -20,14 +20,6 @@ public class Store {
         this.id = id;
     }
 
-    public Store(SDMStore generatedStore) {
-        new Store(generatedStore.getName(),
-                generatedStore.getDeliveryPpk(),
-                Mapper.mapToLocation(generatedStore.getLocation()),
-                Mapper.mapToPrices(generatedStore.getSDMPrices()),
-                generatedStore.getId());
-    }
-
     public String getName() {
         return name;
     }
@@ -69,15 +61,15 @@ public class Store {
     }
 
 
-    // TODO: 07/08/2020 - change the toString implementation
-    @Override
-    public String toString() {
-        return "Store{" +
-                "name='" + name + '\'' +
-                ", deliveryPpk=" + deliveryPpk +
-                ", location=" + location.toString() +
-                ", sdmPrices=" + sdmPrices.toString() +
-                ", id=" + id +
-                '}';
-    }
+//    // TODO: 07/08/2020 - change the toString implementation
+//    @Override
+//    public String toString() {
+//        return "Store{" +
+//                "name='" + name + '\'' +
+//                ", deliveryPpk=" + deliveryPpk +
+//                ", location=" + location.toString() +
+//                ", sdmPrices=" + sdmPrices.toString() +
+//                ", id=" + id +
+//                '}';
+//    }
 }

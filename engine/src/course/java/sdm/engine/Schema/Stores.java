@@ -16,16 +16,6 @@ public class Stores {
         this.stores = stores;
     }
 
-    // if id duplication exist,toMap method will throw IllegalStateException (link: https://www.baeldung.com/java-list-to-map)
-    public Stores(SDMStores generatedStores) {
-            Map<Integer, Store> map = generatedStores.getSDMStore().stream().filter(Objects::nonNull)
-                    .collect(Collectors.toMap(SDMStore::getId, Mapper::mapToStore));
-        if(map.keySet().size() != generatedStores.getSDMStore().size()){
-//                throw appropriate exception
-        }
-            new Stores(map);
-    }
-
     public Map<Integer, Store> getStores() {
         return stores;
     }
@@ -34,11 +24,11 @@ public class Stores {
         this.stores = stores;
     }
 
-    // TODO: 07/08/2020 - change the toString implementation
-    @Override
-    public String toString() {
-        return "Stores{" +
-                "stores=" + stores +
-                '}';
-    }
+//    // TODO: 07/08/2020 - change the toString implementation
+//    @Override
+//    public String toString() {
+//        return "Stores{" +
+//                "stores=" + stores +
+//                '}';
+//    }
 }

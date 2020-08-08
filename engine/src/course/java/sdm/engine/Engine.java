@@ -1,6 +1,7 @@
 package course.java.sdm.engine;
 
 import course.java.sdm.engine.Schema.Descriptor;
+import course.java.sdm.engine.Utils.Mapper;
 import examples.jaxb.schema.generated.SuperDuperMarketDescriptor;
 
 import javax.xml.bind.JAXBContext;
@@ -14,6 +15,20 @@ public class Engine {
 
     public static void foo() {
         System.out.println("At engine#foo");
+    }
+
+    public Descriptor loadData(String dataPath){
+        InputStream inputStream = Engine.class.getResourceAsStream(dataPath);
+        Mapper mapper = new Mapper();
+        Descriptor descriptor = null;
+        try {
+            SuperDuperMarketDescriptor superDuperMarketDescriptor = deserializeFrom(inputStream);
+            descriptor = mapper.mapToDescriptor(superDuperMarketDescriptor);
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+
+        return descriptor;
     }
 
 

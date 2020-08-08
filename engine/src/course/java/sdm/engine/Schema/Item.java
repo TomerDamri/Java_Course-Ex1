@@ -14,10 +14,6 @@ public class Item {
         this.id = id;
     }
 
-    public Item(SDMItem generatedItem) {
-        new Item(generatedItem.getName(), generatedItem.getPurchaseCategory(), generatedItem.getId());
-    }
-
     public String getName() {
         return name;
     }
@@ -42,12 +38,12 @@ public class Item {
         this.id = id;
     }
 
-    @Override
-    public String toString() {
-        return "Item{" +
-                "name='" + name + '\'' +
-                ", purchaseCategory='" + purchaseCategory + '\'' +
-                ", id=" + id +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Item{" +
+//                "name='" + name + '\'' +
+//                ", purchaseCategory='" + purchaseCategory + '\'' +
+//                ", id=" + id +
+//                '}';
+//    }
 }
