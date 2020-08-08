@@ -30,14 +30,6 @@ public class Location {
         this.x = x;
     }
 
-//    @Override
-//    public String toString() {
-//        return "Location{" +
-//                "y=" + y +
-//                ", x=" + x +
-//                '}';
-//    }
-
     private boolean isValidLocation(int x, int y) {
         return isaValidValue(x) && isaValidValue(y);
     }

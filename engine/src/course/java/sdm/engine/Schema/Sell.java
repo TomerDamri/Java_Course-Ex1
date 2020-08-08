@@ -1,7 +1,5 @@
 package course.java.sdm.engine.Schema;
 
-import examples.jaxb.schema.generated.SDMSell;
-
 public class Sell {
 
     private int price;
@@ -27,12 +25,4 @@ public class Sell {
     public void setItemId(int itemId) {
         this.itemId = itemId;
     }
-
-//    @Override
-//    public String toString() {
-//        return "Sell{" +
-//                "price=" + price +
-//                ", itemId=" + itemId +
-//                '}';
-//    }
 }

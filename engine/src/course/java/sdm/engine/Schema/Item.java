@@ -1,7 +1,5 @@
 package course.java.sdm.engine.Schema;
 
-import examples.jaxb.schema.generated.SDMItem;
-
 public class Item {
 
     private String name;
@@ -37,13 +35,4 @@ public class Item {
     public void setId(int id) {
         this.id = id;
     }
-
-//    @Override
-//    public String toString() {
-//        return "Item{" +
-//                "name='" + name + '\'' +
-//                ", purchaseCategory='" + purchaseCategory + '\'' +
-//                ", id=" + id +
-//                '}';
-//    }
 }
