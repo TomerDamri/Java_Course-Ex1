@@ -1,22 +1,19 @@
 package course.java.sdm.engine.Schema;
 
 
-import course.java.sdm.engine.Utils.Mapper;
-import examples.jaxb.schema.generated.SDMStore;
-
 public class Store {
 
     private String name;
     private int deliveryPpk;
     private Location location;
-    private Prices sdmPrices;
+    private Prices prices;
     private int id;
 
-    public Store(String name, int deliveryPpk, Location location, Prices sdmPrices, int id) {
+    public Store(String name, int deliveryPpk, Location location, Prices prices, int id) {
         this.name = name;
         this.deliveryPpk = deliveryPpk;
         this.location = location;
-        this.sdmPrices = sdmPrices;
+        this.prices = prices;
         this.id = id;
     }
 
@@ -44,12 +41,12 @@ public class Store {
         this.location = location;
     }
 
-    public Prices getSdmPrices() {
-        return sdmPrices;
+    public Prices getPrices() {
+        return prices;
     }
 
-    public void setSdmPrices(Prices sdmPrices) {
-        this.sdmPrices = sdmPrices;
+    public void setPrices(Prices prices) {
+        this.prices = prices;
     }
 
     public int getId() {
@@ -61,15 +58,15 @@ public class Store {
     }
 
 
-//    // TODO: 07/08/2020 - change the toString implementation
-//    @Override
-//    public String toString() {
-//        return "Store{" +
-//                "name='" + name + '\'' +
-//                ", deliveryPpk=" + deliveryPpk +
-//                ", location=" + location.toString() +
-//                ", sdmPrices=" + sdmPrices.toString() +
-//                ", id=" + id +
-//                '}';
-//    }
+    // TODO: 07/08/2020 - change the toString implementation
+    @Override
+    public String toString() {
+        return "{ " +
+                "Id: " + id +
+                ",\nName: " + name +
+                ",\nPPK: " + deliveryPpk +
+                " }";
+    }
 }
+//                ",\nItems:" + prices +
+//                ",\nPrices:[\n" + prices.toString() +

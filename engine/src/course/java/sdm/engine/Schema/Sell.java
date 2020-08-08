@@ -1,7 +1,5 @@
 package course.java.sdm.engine.Schema;
 
-import examples.jaxb.schema.generated.SDMSell;
-
 public class Sell {
 
     private int price;
