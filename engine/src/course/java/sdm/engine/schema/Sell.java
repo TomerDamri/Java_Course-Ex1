@@ -1,4 +1,4 @@
-package course.java.sdm.engine.Schema;
+package course.java.sdm.engine.schema;
 
 public class Sell {
 

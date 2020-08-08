@@ -1,4 +1,4 @@
-package course.java.sdm.engine.Schema;
+package course.java.sdm.engine.schema;
 
 public class Location {
     private final Integer MIN_VALUE = 0;

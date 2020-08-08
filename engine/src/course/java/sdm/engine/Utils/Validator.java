@@ -1,17 +1,14 @@
 package course.java.sdm.engine.Utils;
 
-import course.java.sdm.engine.Schema.Items;
-import course.java.sdm.engine.Schema.Store;
-import course.java.sdm.engine.Schema.Stores;
+import course.java.sdm.engine.schema.Items;
+import course.java.sdm.engine.schema.Store;
+import course.java.sdm.engine.schema.Stores;
 import course.java.sdm.engine.exceptions.IllegalFileExtensionException;
 import course.java.sdm.engine.exceptions.ItemNotExistInStores;
 import course.java.sdm.engine.exceptions.ItemNotFoundException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 

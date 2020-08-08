@@ -1,16 +1,14 @@
-package course.java.sdm.engine.Schema;
-
-
-import course.java.sdm.engine.Utils.Mapper;
-import examples.jaxb.schema.generated.SDMStore;
+package course.java.sdm.engine.schema;
 
 public class Store {
 
+    private int id;
     private String name;
     private int deliveryPpk;
     private Location location;
     private Prices prices;
-    private int id;
+
+    private Items itemsInStore;
 
     public Store(String name, int deliveryPpk, Location location, Prices prices, int id) {
         this.id = id;
