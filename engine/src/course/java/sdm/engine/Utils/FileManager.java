@@ -1,7 +1,6 @@
 package course.java.sdm.engine.Utils;
 
-import course.java.sdm.engine.EngineService;
-import course.java.sdm.engine.Schema.Descriptor;
+import course.java.sdm.engine.schema.Descriptor;
 import examples.jaxb.schema.generated.SuperDuperMarketDescriptor;
 
 import javax.xml.bind.JAXBContext;

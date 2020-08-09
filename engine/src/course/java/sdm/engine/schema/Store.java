@@ -1,20 +1,21 @@
-package course.java.sdm.engine.Schema;
-
+package course.java.sdm.engine.schema;
 
 public class Store {
 
+    private int id;
     private String name;
     private int deliveryPpk;
     private Location location;
     private Prices prices;
-    private int id;
+
+    private Items itemsInStore;
 
     public Store(String name, int deliveryPpk, Location location, Prices prices, int id) {
+        this.id = id;
         this.name = name;
         this.deliveryPpk = deliveryPpk;
         this.location = location;
         this.prices = prices;
-        this.id = id;
     }
 
     public String getName() {
@@ -56,4 +57,17 @@ public class Store {
     public void setId(int id) {
         this.id = id;
     }
+
+
+    // TODO: 07/08/2020 - change the toString implementation
+    @Override
+    public String toString() {
+        return "{ " +
+                "Id: " + id +
+                ",\nName: " + name +
+                ",\nPPK: " + deliveryPpk +
+                " }";
+    }
 }
+//                ",\nItems:" + prices +
+//                ",\nPrices:[\n" + prices.toString() +

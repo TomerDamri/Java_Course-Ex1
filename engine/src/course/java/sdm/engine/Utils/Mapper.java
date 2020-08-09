@@ -1,7 +1,7 @@
 package course.java.sdm.engine.Utils;
 
-import course.java.sdm.engine.Schema.Location;
-import course.java.sdm.engine.Schema.*;
+import course.java.sdm.engine.schema.Location;
+import course.java.sdm.engine.schema.*;
 import course.java.sdm.engine.exceptions.DuplicateIdsException;
 import examples.jaxb.schema.generated.*;
 

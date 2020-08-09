@@ -1,14 +1,23 @@
-package course.java.sdm.engine.Schema;
+package course.java.sdm.engine.schema;
 
 public class Item {
 
+    private int id;
     private String name;
     private String purchaseCategory;
-    private int id;
+
 
     public Item(String name, String purchaseCategory, int id) {
+        this.id = id;
         this.name = name;
         this.purchaseCategory = purchaseCategory;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -28,11 +37,13 @@ public class Item {
         this.purchaseCategory = purchaseCategory;
     }
 
-    public int getId() {
-        return id;
+    //todo: update toString with the new members if exist
+    @Override
+    public String toString() {
+        return
+                "Id: " + id +
+                        ",\nName: " + name +
+                        ",\nPurchase Category: " + purchaseCategory;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 }
