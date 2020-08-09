@@ -6,35 +6,43 @@ public class Location {
     private int y;
     private int x;
 
-    public Location(int x, int y) {
+    public Location (int x, int y) {
         if (!isValidLocation(x, y)) {
-            throw new IndexOutOfBoundsException(new StringBuilder("The Location (").append(x).append(",").append(y).append(") is not valid because(").append(MIN_VALUE).append("<= X,Y <=").append(MAX_VALUE).append(")").toString());
+            throw new IndexOutOfBoundsException(new StringBuilder("The Location (").append(x)
+                                                                                   .append(",")
+                                                                                   .append(y)
+                                                                                   .append(") is not valid because(")
+                                                                                   .append(MIN_VALUE)
+                                                                                   .append("<= X,Y <=")
+                                                                                   .append(MAX_VALUE)
+                                                                                   .append(")")
+                                                                                   .toString());
         }
         this.x = x;
         this.y = y;
     }
 
-    public int getY() {
+    public int getY () {
         return y;
     }
 
-    public int getX() {
+    public int getX () {
         return x;
     }
 
-    public void setY(int y) {
+    public void setY (int y) {
         this.y = y;
     }
 
-    public void setX(int x) {
+    public void setX (int x) {
         this.x = x;
     }
 
-    private boolean isValidLocation(int x, int y) {
+    private boolean isValidLocation (int x, int y) {
         return isaValidValue(x) && isaValidValue(y);
     }
 
-    private boolean isaValidValue(int z) {
+    private boolean isaValidValue (int z) {
         return z >= 0 && z <= 50;
     }
 }

@@ -7,31 +7,28 @@ public class StoreItem {
     private int price;
     private int purchasesCount;
 
-    public StoreItem(Item item) {
+    public StoreItem (Item item) {
         this.item = item;
     }
 
-    public int getPrice() {
+    public int getPrice () {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice (int price) {
         this.price = price;
     }
 
-    public int getPurchasesCount() {
+    public int getPurchasesCount () {
         return purchasesCount;
     }
 
-    public void setPurchasesCount(int purchasesCount) {
+    public void setPurchasesCount (int purchasesCount) {
         this.purchasesCount = purchasesCount;
     }
 
-
     @Override
-    public String toString() {
-        return  item.toString() +
-                ",\nPrice in store: " + price +
-                ",\nNumber of purchases in store: " + purchasesCount;
+    public String toString () {
+        return item.toString() + ",\nPrice in store: " + price + ",\nNumber of purchases in store: " + purchasesCount;
     }
 }
