@@ -1,12 +1,14 @@
 package course.java.sdm.engine.Utils;
 
+import course.java.sdm.engine.exceptions.DuplicateIdsException;
 import course.java.sdm.engine.schema.Location;
 import course.java.sdm.engine.schema.*;
-import course.java.sdm.engine.exceptions.DuplicateIdsException;
 import examples.jaxb.schema.generated.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Mapper {
@@ -42,18 +44,8 @@ public class Mapper {
             return null;
         }
 
-        try {
-            Map<Integer, Item> map = generatedItems.getSDMItem().stream().filter(Objects::nonNull)
-                    .collect(Collectors.toMap(SDMItem::getId, this::mapToItem));
-            // TODO: 08/08/2020 - Do I need to delete this?
-            if (map.keySet().size() != generatedItems.getSDMItem().size()) {
-//                throw appropriate exception
-            }
-
-            return new Items(map);
-        } catch (IllegalStateException ex) {
-            throw new DuplicateIdsException(Item.class.getSimpleName(), Items.class.getSimpleName(), ex);
-        }
+        Map<Integer, Item> map = fromGeneratedListToMap(generatedItems.getSDMItem(), SDMItem::getId, this::mapToItem, Item.class.getSimpleName(), Items.class.getSimpleName());
+        return new Items(map);
     }
 
 
@@ -69,17 +61,8 @@ public class Mapper {
         if (generatedPrices == null) {
             return null;
         }
-
-        try {
-            Map<Integer, Sell> map = generatedPrices.getSDMSell().stream().filter(Objects::nonNull).collect(Collectors.toMap(SDMSell::getItemId, this::mapToSell));
-            if (map.keySet().size() != generatedPrices.getSDMSell().size()) {
-//                throw appropriate exception
-            }
-
-            return new Prices(map);
-        } catch (IllegalStateException ex) {
-            throw new DuplicateIdsException(Sell.class.getSimpleName(), Prices.class.getSimpleName(), ex);
-        }
+        Map<Integer, Sell> map = fromGeneratedListToMap(generatedPrices.getSDMSell(), SDMSell::getItemId, this::mapToSell, Sell.class.getSimpleName(), Prices.class.getSimpleName());
+        return new Prices(map);
     }
 
     private Store mapToStore(SDMStore generatedStore) {
@@ -98,17 +81,21 @@ public class Mapper {
         if (generatedStores == null) {
             return null;
         }
+        Map<Integer, Store> map = fromGeneratedListToMap(generatedStores.getSDMStore(), SDMStore::getId, this::mapToStore, Store.class.getSimpleName(), Stores.class.getSimpleName());
+        return new Stores(map);
+    }
 
+    private <K, V, G> Map<K, V> fromGeneratedListToMap(List<G> list, Function<G, K> getKeyFunction, Function<G, V> getValueFunction, String valuesClassName, String valuesComposeClassName) {
         try {
-            Map<Integer, Store> map = generatedStores.getSDMStore().stream().filter(Objects::nonNull)
-                    .collect(Collectors.toMap(SDMStore::getId, this::mapToStore));
-            if (map.keySet().size() != generatedStores.getSDMStore().size()) {
+            Map<K, V> map = list.stream().filter(Objects::nonNull)
+                    .collect(Collectors.toMap(getKeyFunction, getValueFunction));
+            if (map.keySet().size() != list.size()) {
 //                throw appropriate exception
             }
 
-            return new Stores(map);
+            return map;
         } catch (IllegalStateException ex) {
-            throw new DuplicateIdsException(Store.class.getSimpleName(), Stores.class.getSimpleName(), ex);
+            throw new DuplicateIdsException(valuesClassName, valuesComposeClassName, ex);
         }
     }
 }
