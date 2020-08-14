@@ -2,14 +2,32 @@ package course.java.sdm.engine.schema;
 
 public class Item {
 
+    public enum PurchaseCategory {
+        QUANTITY, WEIGHT;
+
+        private static PurchaseCategory createPurchaseCategory (String purchaseCategoryStr) {
+            switch (purchaseCategoryStr) {
+            case "Quantity":
+                return QUANTITY;
+            case "Weight":
+                return WEIGHT;
+            }
+
+            throw new IllegalArgumentException(String.format("purchase category should be %s or %s and not %s",
+                                                             QUANTITY,
+                                                             WEIGHT,
+                                                             purchaseCategoryStr));
+        }
+    }
+
     private int id;
     private String name;
-    private String purchaseCategory;
+    private PurchaseCategory purchaseCategory;
 
     public Item (String name, String purchaseCategory, int id) {
         this.id = id;
         this.name = name;
-        this.purchaseCategory = purchaseCategory;
+        this.purchaseCategory = PurchaseCategory.createPurchaseCategory(purchaseCategory);
     }
 
     public int getId () {
@@ -28,18 +46,22 @@ public class Item {
         this.name = name;
     }
 
-    public String getPurchaseCategory () {
+    public PurchaseCategory getPurchaseCategory () {
         return purchaseCategory;
-    }
-
-    public void setPurchaseCategory (String purchaseCategory) {
-        this.purchaseCategory = purchaseCategory;
     }
 
     // todo: update toString with the new members if exist
     @Override
     public String toString () {
-        return "Id: " + id + ",\nName: " + name + ",\nPurchase Category: " + purchaseCategory;
+        return new StringBuilder().append("Id: ")
+                                  .append(id)
+                                  .append(",\nName: ")
+                                  .append(name)
+                                  .append(",\nPurchase Category: ")
+                                  .append(purchaseCategory)
+                                  .append("\n")
+                                  .toString();
+
     }
 
 }

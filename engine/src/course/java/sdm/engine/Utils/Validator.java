@@ -20,6 +20,20 @@ public class Validator {
         validateIfFileExist(dataPath);
     }
 
+    public void validateItemsAndStores (Items items, Stores stores) {
+        Set<Integer> allItemsIds = items.getItems().keySet();
+        Set<Integer> allStoresItemsIds = new HashSet<>();
+
+        //validate that all store items exist in items
+        for (Store currStore : stores.getStores().values()) {
+            Set<Integer> allItemIdsInCurrStore = validateStoreItemsExist(allItemsIds, currStore);
+            allStoresItemsIds.addAll(allItemIdsInCurrStore);
+        }
+
+        //validate that all items have (at least one) store that sell it
+        validateItemsExistInStores(allItemsIds, allStoresItemsIds);
+    }
+
     private void validateIfFileExist (String dataPath) throws FileNotFoundException {
         File file = new File(dataPath);
         if (!file.exists()) {
@@ -27,20 +41,8 @@ public class Validator {
         }
     }
 
-    public void validateItemsAndStores (Items items, Stores stores) {
-        Set<Integer> allItemsIds = items.getItems().keySet();
-        Set<Integer> allStoresItemsIds = new HashSet<>();
-
-        for (Store currStore : stores.getStores().values()) {
-            Set<Integer> allItemIdsInCurrStore = validateStoreItemsExist(allItemsIds, currStore);
-            allStoresItemsIds.addAll(allItemIdsInCurrStore);
-        }
-
-        validateItemsExistInStores(allItemsIds, allStoresItemsIds);
-    }
-
     private Set<Integer> validateStoreItemsExist (Set<Integer> allItemsIds, Store currStore) {
-        Set<Integer> allItemIdsInCurrStore = currStore.getPrices().getSells().keySet();
+        Set<Integer> allItemIdsInCurrStore = currStore.getItemIdToStoreItem().keySet();
         if (!allItemsIds.containsAll(allItemIdsInCurrStore)) {
             // TODO: 08/08/2020 - add item Ids of all items that don't exist in items
             throw new ItemNotFoundException(currStore.getName());

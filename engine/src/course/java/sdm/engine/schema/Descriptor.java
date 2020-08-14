@@ -1,28 +1,52 @@
 package course.java.sdm.engine.schema;
 
+import course.java.sdm.engine.schema.systemModel.SystemItem;
+import course.java.sdm.engine.schema.systemModel.SystemOrder;
+import course.java.sdm.engine.schema.systemModel.SystemStore;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class Descriptor {
 
-    protected Items items;
-    protected Stores stores;
+    private static Integer numOfOrders = 0;
+    private Map<Integer, SystemStore> systemStores;
+    private Map<Integer, SystemItem> systemItems;
+    private Map<Integer, SystemOrder> systemOrders;
 
-    public Descriptor (Items items, Stores stores) {
-        this.items = items;
-        this.stores = stores;
+    public static Integer generateOrderId(){
+        Integer num = numOfOrders;
+        numOfOrders ++;
+        return num;
     }
 
-    public Items getItems () {
-        return items;
+    public Descriptor(Map<Integer, SystemStore> systemStores, Map<Integer, SystemItem> systemItems) {
+        this.systemStores = systemStores;
+        this.systemItems = systemItems;
+        this.systemOrders = new HashMap<>();
     }
 
-    public void setItems (Items items) {
-        this.items = items;
+    public Map<Integer, SystemStore> getSystemStores() {
+        return systemStores;
     }
 
-    public Stores getStores () {
-        return stores;
+    public void setSystemStores(Map<Integer, SystemStore> systemStores) {
+        this.systemStores = systemStores;
     }
 
-    public void setStores (Stores stores) {
-        this.stores = stores;
+    public Map<Integer, SystemItem> getSystemItems() {
+        return systemItems;
+    }
+
+    public void setSystemItems(Map<Integer, SystemItem> systemItems) {
+        this.systemItems = systemItems;
+    }
+
+    public Map<Integer, SystemOrder> getSystemOrders() {
+        return systemOrders;
+    }
+
+    public void setSystemOrders(Map<Integer, SystemOrder> systemOrders) {
+        this.systemOrders = systemOrders;
     }
 }

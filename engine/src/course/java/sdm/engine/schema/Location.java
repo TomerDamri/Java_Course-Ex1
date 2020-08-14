@@ -30,19 +30,16 @@ public class Location {
         return x;
     }
 
-    public void setY (int y) {
-        this.y = y;
-    }
-
-    public void setX (int x) {
-        this.x = x;
-    }
-
     private boolean isValidLocation (int x, int y) {
         return isaValidValue(x) && isaValidValue(y);
     }
 
     private boolean isaValidValue (int z) {
-        return z >= 0 && z <= 50;
+        return z >= MIN_VALUE && z <= MAX_VALUE;
+    }
+
+    @Override
+    public String toString () {
+        return new StringBuilder("Location: (").append(x).append(",").append(y).append(")\n").toString();
     }
 }

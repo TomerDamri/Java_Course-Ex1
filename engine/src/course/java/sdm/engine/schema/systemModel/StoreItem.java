@@ -3,20 +3,20 @@ package course.java.sdm.engine.schema.systemModel;
 import course.java.sdm.engine.schema.Item;
 
 public class StoreItem {
-    private Item item;
-    private int price;
+    private PricedItem pricedItem;
     private int purchasesCount;
 
-    public StoreItem (Item item) {
-        this.item = item;
+    public StoreItem (Item item, Integer price) {
+        this.pricedItem = new PricedItem(item, price);
+        this.purchasesCount = 0;
     }
 
     public int getPrice () {
-        return price;
+        return pricedItem.getPrice();
     }
 
     public void setPrice (int price) {
-        this.price = price;
+        pricedItem.setPrice(price);
     }
 
     public int getPurchasesCount () {
@@ -29,6 +29,10 @@ public class StoreItem {
 
     @Override
     public String toString () {
-        return item.toString() + ",\nPrice in store: " + price + ",\nNumber of purchases in store: " + purchasesCount;
+        return new StringBuilder().append(pricedItem.toString())
+                                  .append(",\nNumber of purchases in store: ")
+                                  .append(purchasesCount)
+                                  .append("\n")
+                                  .toString();
     }
 }

@@ -22,7 +22,8 @@ public class Sell {
         return itemId;
     }
 
-    public void setItemId (int itemId) {
-        this.itemId = itemId;
+    @Override
+    public String toString () {
+        return new StringBuilder("Sell item: \n{item Id: ").append(itemId).append(" price: ").append(price).append("}\n").toString();
     }
 }

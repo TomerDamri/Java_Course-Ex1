@@ -14,7 +14,8 @@ public class Prices {
         return sells;
     }
 
-    public void setSells (Map<Integer, Sell> sells) {
-        this.sells = sells;
+    @Override
+    public String toString () {
+        return new StringBuilder().append("Sell Items: ").append(sells.values()).append("\n").toString();
     }
 }

@@ -1,27 +1,90 @@
 package course.java.sdm.engine.Utils;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import course.java.sdm.engine.exceptions.DuplicateIdsException;
 import course.java.sdm.engine.schema.*;
 import course.java.sdm.engine.schema.Location;
+import course.java.sdm.engine.schema.systemModel.StoreItem;
+import course.java.sdm.engine.schema.systemModel.SystemItem;
+import course.java.sdm.engine.schema.systemModel.SystemStore;
 import examples.jaxb.schema.generated.*;
 
 public class Mapper {
 
-    public Descriptor mapToDescriptor (SuperDuperMarketDescriptor generatedDescriptor) {
-        if (generatedDescriptor == null) {
+    public Items mapGeneratedItemsToItems (SDMItems generatedItems) {
+        if (generatedItems == null) {
             return null;
         }
 
-        Descriptor descriptor = new Descriptor(mapToItems(generatedDescriptor.getSDMItems()),
-                                               mapToStores(generatedDescriptor.getSDMStores()));
+        return mapToItems(generatedItems);
+    }
+
+    public Stores mapGeneratedStoresToStores (SDMStores generatedStores, Items items) {
+        if (generatedStores == null) {
+            return null;
+        }
+        return mapToStores(generatedStores, items);
+    }
+
+    public Descriptor mapToDescriptor (Items items, Stores stores) {
+        Map<Integer, SystemStore> systemStores = fromGeneratedListToMap(new ArrayList<>(stores.getStores().values()),
+                                                                        Store::getId,
+                                                                        SystemStore::new,
+                                                                        Store.class.getSimpleName(),
+                                                                        Stores.class.getSimpleName());
+        Map<Integer, SystemItem> systemItemS = mapToSystemItems(items, systemStores.values());
+
+        Descriptor descriptor = new Descriptor(systemStores, systemItemS);
 
         return descriptor;
+    }
+
+    private Map<Integer, SystemItem> mapToSystemItems (Items items, Collection<SystemStore> stores) {
+        Map<Integer, StoreItem> storeItems;
+        SystemItem systemItem;
+        int storesCount;
+        double avgPrice, sumPrices;
+        Map<Integer, SystemItem> systemItems = new HashMap<>();
+
+        for (Map.Entry<Integer, Item> entry : items.getItems().entrySet()) {
+            storesCount = 0;
+            avgPrice = 0;
+            sumPrices = 0;
+            for (SystemStore store : stores) {
+                storeItems = store.getStore().getItemIdToStoreItem();
+                if (storeItems.containsKey(entry.getKey())) {
+                    storesCount++;
+                    sumPrices += storeItems.get(entry.getKey()).getPrice();
+                }
+            }
+            if (storesCount > 0) {
+                avgPrice = sumPrices / storesCount;
+            }
+            systemItem = new SystemItem(entry.getValue());
+            systemItem.setAvgPrice(avgPrice);
+            systemItem.setStoresCount(storesCount);
+            systemItems.put(entry.getKey(), systemItem);
+        }
+
+        return systemItems;
+    }
+
+    private Stores mapToStores (SDMStores sdmStores, Items items) {
+        if (sdmStores == null) {
+            return null;
+        }
+
+        Map<Integer, Store> stores = fromGeneratedListToMap(sdmStores.getSDMStore(),
+                                                            SDMStore::getId,
+                                                            sdmStore -> mapToStore(sdmStore, items),
+                                                            SDMStore.class.getSimpleName(),
+                                                            SDMStores.class.getSimpleName());
+
+        return new Stores(stores);
+
     }
 
     private Location mapToLocation (examples.jaxb.schema.generated.Location generatedLocation) {
@@ -53,27 +116,7 @@ public class Mapper {
         return new Items(map);
     }
 
-    private Sell mapToSell (SDMSell generatedSell) {
-        if (generatedSell == null) {
-            return null;
-        }
-
-        return new Sell(generatedSell.getPrice(), generatedSell.getItemId());
-    }
-
-    private Prices mapToPrices (SDMPrices generatedPrices) {
-        if (generatedPrices == null) {
-            return null;
-        }
-        Map<Integer, Sell> map = fromGeneratedListToMap(generatedPrices.getSDMSell(),
-                                                        SDMSell::getItemId,
-                                                        this::mapToSell,
-                                                        Sell.class.getSimpleName(),
-                                                        Prices.class.getSimpleName());
-        return new Prices(map);
-    }
-
-    private Store mapToStore (SDMStore generatedStore) {
+    private Store mapToStore (SDMStore generatedStore, Items items) {
         if (generatedStore == null) {
             return null;
         }
@@ -81,20 +124,29 @@ public class Mapper {
         return new Store(generatedStore.getName(),
                          generatedStore.getDeliveryPpk(),
                          mapToLocation(generatedStore.getLocation()),
-                         mapToPrices(generatedStore.getSDMPrices()),
+                         mapToStoreItems(generatedStore.getSDMPrices(), items),
                          generatedStore.getId());
     }
 
-    private Stores mapToStores (SDMStores generatedStores) {
-        if (generatedStores == null) {
+    private Map<Integer, StoreItem> mapToStoreItems (SDMPrices sdmPrices, Items items) {
+        return fromGeneratedListToMap(sdmPrices.getSDMSell(),
+                                      SDMSell::getItemId,
+                                      sdmSell -> mapToStoreItem(sdmSell, items),
+                                      SDMSell.class.getSimpleName(),
+                                      SDMPrices.class.getSimpleName());
+    }
+
+    private StoreItem mapToStoreItem (SDMSell sdmSell, Items items) {
+        if (sdmSell == null) {
             return null;
         }
-        Map<Integer, Store> map = fromGeneratedListToMap(generatedStores.getSDMStore(),
-                                                         SDMStore::getId,
-                                                         this::mapToStore,
-                                                         Store.class.getSimpleName(),
-                                                         Stores.class.getSimpleName());
-        return new Stores(map);
+
+        Item item = items.getItems().get(sdmSell.getItemId());
+        if (item == null) {
+            // throw new ItemNotFoundException();
+        }
+
+        return new StoreItem(item, sdmSell.getPrice());
     }
 
     private <K, V, G> Map<K, V> fromGeneratedListToMap (List<G> list,

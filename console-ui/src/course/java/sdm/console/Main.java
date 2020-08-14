@@ -9,7 +9,6 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException {
         EngineService engineService = new EngineService();
         engineService.loadData("C:\\Users\\97205\\Downloads\\ex1-big.xml");
-        System.out.println(engineService.getItems());
         System.out.println();
         System.out.println();
         System.out.println();
@@ -18,6 +17,5 @@ public class Main {
         System.out.println();
         System.out.println();
         System.out.println();
-        System.out.println(engineService.getStores());
     }
 }

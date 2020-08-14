@@ -1,21 +1,23 @@
 package course.java.sdm.engine.schema;
 
+import java.util.Map;
+
+import course.java.sdm.engine.schema.systemModel.StoreItem;
+
 public class Store {
 
     private int id;
     private String name;
     private int deliveryPpk;
     private Location location;
-    private Prices prices;
+    private Map<Integer, StoreItem> itemIdToStoreItem;
 
-    private Items itemsInStore;
-
-    public Store (String name, int deliveryPpk, Location location, Prices prices, int id) {
+    public Store (String name, int deliveryPpk, Location location, Map<Integer, StoreItem> itemIdToStoreItem, int id) {
         this.id = id;
         this.name = name;
         this.deliveryPpk = deliveryPpk;
         this.location = location;
-        this.prices = prices;
+        this.itemIdToStoreItem = itemIdToStoreItem;
     }
 
     public String getName () {
@@ -42,12 +44,8 @@ public class Store {
         this.location = location;
     }
 
-    public Prices getPrices () {
-        return prices;
-    }
-
-    public void setPrices (Prices prices) {
-        this.prices = prices;
+    public Map<Integer, StoreItem> getItemIdToStoreItem() {
+        return itemIdToStoreItem;
     }
 
     public int getId () {
@@ -58,11 +56,18 @@ public class Store {
         this.id = id;
     }
 
-    // TODO: 07/08/2020 - change the toString implementation
     @Override
     public String toString () {
-        return "{ " + "Id: " + id + ",\nName: " + name + ",\nPPK: " + deliveryPpk + " }";
+        return new StringBuilder().append("Store : { Id: ")
+                                  .append(id)
+                                  .append(", Name: ")
+                                  .append(name)
+                                  .append(", PPK: ")
+                                  .append(deliveryPpk)
+                                  .append(location.toString())
+                                  .append("Store Items: ")
+                                  .append(itemIdToStoreItem.values().toString())
+                                  .append(" }\n")
+                                  .toString();
     }
 }
-// ",\nItems:" + prices +
-// ",\nPrices:[\n" + prices.toString() +

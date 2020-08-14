@@ -11,10 +11,17 @@ public class SystemItem {
 
     public SystemItem (Item item) {
         this.item = item;
+        this.storesCount = 0;
+        this.avgPrice = 0;
+        this.ordersCount = 0;
     }
 
     public int getStoresCount () {
         return storesCount;
+    }
+
+    public Item getItem () {
+        return item;
     }
 
     public void setStoresCount (int storesCount) {
@@ -39,7 +46,14 @@ public class SystemItem {
 
     @Override
     public String toString () {
-        return item.toString() + ",\nNumber of stores supplied in: " + storesCount + ",\nAverage price: " + avgPrice
-                    + ",\nNumber of purchases: " + ordersCount;
+        return new StringBuilder().append(item.toString())
+                                  .append(",\nNumber of stores supplied in: ")
+                                  .append(storesCount)
+                                  .append(",\nAverage price: ")
+                                  .append(avgPrice)
+                                  .append(",\nNumber of purchases: ")
+                                  .append(ordersCount)
+                                  .append("\n")
+                                  .toString();
     }
 }

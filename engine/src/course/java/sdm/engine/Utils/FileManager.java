@@ -10,25 +10,48 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import course.java.sdm.engine.schema.Descriptor;
+import course.java.sdm.engine.schema.Items;
+import course.java.sdm.engine.schema.Stores;
 import examples.jaxb.schema.generated.SuperDuperMarketDescriptor;
 
 public class FileManager {
 
     private final static String JAXB_XML_PACKAGE_NAME = "examples.jaxb.schema.generated";
+    private final static Mapper mapper = new Mapper();
+    private final static Validator validator = new Validator();
 
-    public Descriptor loadData (String xml_file_path) throws FileNotFoundException {
+    private static FileManager singletonFileManager = null;
+
+    private FileManager () {
+    }
+
+    public static FileManager getFileManager() {
+        if (singletonFileManager == null) {
+            singletonFileManager = new FileManager();
+        }
+
+        return singletonFileManager;
+    }
+
+    public SuperDuperMarketDescriptor generateDataFromXmlFile (String xml_file_path) throws FileNotFoundException {
+        validator.validateFile(xml_file_path);
         InputStream inputStream = new FileInputStream(new File(xml_file_path));
-        Mapper mapper = new Mapper();
-        Descriptor descriptor = null;
+        SuperDuperMarketDescriptor superDuperMarketDescriptor = null;
         try {
-            SuperDuperMarketDescriptor superDuperMarketDescriptor = deserializeFrom(inputStream);
-            descriptor = mapper.mapToDescriptor(superDuperMarketDescriptor);
+            superDuperMarketDescriptor = deserializeFrom(inputStream);
         }
         catch (JAXBException e) {
             e.printStackTrace();
         }
+        return superDuperMarketDescriptor;
+    }
 
-        return descriptor;
+    public Descriptor loadDataFromGeneratedData (SuperDuperMarketDescriptor superDuperMarketDescriptor) {
+        Items items = mapper.mapGeneratedItemsToItems(superDuperMarketDescriptor.getSDMItems());
+        Stores stores = mapper.mapGeneratedStoresToStores(superDuperMarketDescriptor.getSDMStores(), items);
+        validator.validateItemsAndStores(items, stores);
+
+        return mapper.mapToDescriptor(items, stores);
     }
 
     private SuperDuperMarketDescriptor deserializeFrom (InputStream in) throws JAXBException {
