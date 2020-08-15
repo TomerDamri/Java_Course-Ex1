@@ -59,7 +59,6 @@ public class Item {
                                   .append(name)
                                   .append(",\nPurchase Category: ")
                                   .append(purchaseCategory)
-                                  .append("\n")
                                   .toString();
 
     }

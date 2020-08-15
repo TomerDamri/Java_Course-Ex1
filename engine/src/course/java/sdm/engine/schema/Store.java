@@ -44,7 +44,7 @@ public class Store {
         this.location = location;
     }
 
-    public Map<Integer, StoreItem> getItemIdToStoreItem() {
+    public Map<Integer, StoreItem> getItemIdToStoreItem () {
         return itemIdToStoreItem;
     }
 
@@ -58,16 +58,17 @@ public class Store {
 
     @Override
     public String toString () {
-        return new StringBuilder().append("Store : { Id: ")
+        return new StringBuilder().append("\n{Id: ")
                                   .append(id)
-                                  .append(", Name: ")
+                                  .append(",\nName: ")
                                   .append(name)
-                                  .append(", PPK: ")
+                                  .append(",\nPPK: ")
                                   .append(deliveryPpk)
+                                  .append(",\n")
                                   .append(location.toString())
-                                  .append("Store Items: ")
+                                  .append(",\nStore Items:")
                                   .append(itemIdToStoreItem.values().toString())
-                                  .append(" }\n")
+                                  .append(" }")
                                   .toString();
     }
 }

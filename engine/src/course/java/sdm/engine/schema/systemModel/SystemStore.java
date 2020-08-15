@@ -2,7 +2,6 @@ package course.java.sdm.engine.schema.systemModel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import course.java.sdm.engine.schema.Store;
 
@@ -25,5 +24,13 @@ public class SystemStore {
             orders = new ArrayList<>();
         }
         return orders;
+    }
+
+    @Override
+    public String toString () {
+        return new StringBuilder()
+                .append(store.toString())
+                .append(",\nStore Orders:")
+                .append(orders.toString()).toString();
     }
 }

@@ -40,6 +40,6 @@ public class Location {
 
     @Override
     public String toString () {
-        return new StringBuilder("Location: (").append(x).append(",").append(y).append(")\n").toString();
+        return new StringBuilder("Location: (").append(x).append(",").append(y).append(")").toString();
     }
 }

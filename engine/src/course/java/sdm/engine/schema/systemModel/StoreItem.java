@@ -29,10 +29,11 @@ public class StoreItem {
 
     @Override
     public String toString () {
-        return new StringBuilder().append(pricedItem.toString())
+        return new StringBuilder().append("\n{")
+                .append(pricedItem.toString())
                                   .append(",\nNumber of purchases in store: ")
                                   .append(purchasesCount)
-                                  .append("\n")
+                                  .append("}")
                                   .toString();
     }
 }

@@ -25,6 +25,6 @@ public class PricedItem {
 
     @Override
     public String toString () {
-        return new StringBuilder().append(item.toString()).append(",\nPrice in store: ").append(price).append("\n").toString();
+        return new StringBuilder().append(item.toString()).append(",\nPrice in store: ").append(price).toString();
     }
 }
