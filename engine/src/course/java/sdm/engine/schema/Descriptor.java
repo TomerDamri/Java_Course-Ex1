@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class Descriptor {
 
-    private static Integer numOfOrders = 0;
+    private static Integer numOfOrders = 1;
     private Map<Integer, SystemStore> systemStores;
     private Map<Integer, SystemItem> systemItems;
     private Map<Integer, SystemOrder> systemOrders;

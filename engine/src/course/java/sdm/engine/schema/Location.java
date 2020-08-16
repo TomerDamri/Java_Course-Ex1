@@ -1,5 +1,7 @@
 package course.java.sdm.engine.schema;
 
+import java.util.Objects;
+
 public class Location {
     private final Integer MIN_VALUE = 0;
     private final Integer MAX_VALUE = 50;
@@ -30,6 +32,20 @@ public class Location {
         return x;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Location location = (Location) o;
+        return y == location.y &&
+                x == location.x;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(MIN_VALUE, MAX_VALUE, y, x);
+    }
+
     private boolean isValidLocation (int x, int y) {
         return isaValidValue(x) && isaValidValue(y);
     }
@@ -40,6 +56,6 @@ public class Location {
 
     @Override
     public String toString () {
-        return new StringBuilder("Location: (").append(x).append(",").append(y).append(")").toString();
+        return new StringBuilder("(").append(x).append(",").append(y).append(")").toString();
     }
 }

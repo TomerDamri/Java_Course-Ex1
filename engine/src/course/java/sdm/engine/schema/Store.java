@@ -65,7 +65,6 @@ public class Store {
                                   .append(",\nPPK: ")
                                   .append(deliveryPpk)
                                   .append(",\n")
-                                  .append(location.toString())
                                   .append(",\nStore Items:")
                                   .append(itemIdToStoreItem.values().toString())
                                   .append(" }")

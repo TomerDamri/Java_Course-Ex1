@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException {
         Menu menu = new Menu();
         menu.displayMenu();
-//        engineService.loadData("C:\\Users\\einav\\Downloads\\ex1-big.xml");
+//        engineService.loadData("C:\\Users\\einav\\Downloads\\ex 1 - big.xml");
 ////        System.out.println(engineService.getItems());
 //        System.out.println(engineService.getStores());
     }

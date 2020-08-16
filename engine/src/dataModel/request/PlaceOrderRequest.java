@@ -1,17 +1,18 @@
 package dataModel.request;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Map;
 
 import course.java.sdm.engine.schema.Location;
 
-public class CreateOrderRequest {
+public class PlaceOrderRequest {
     private int storeId;
-    private LocalDateTime orderDate;
+    private Date orderDate;
     private Location orderLocation;
     private Map<Integer, Double> orderItemToAmount;
 
-    public CreateOrderRequest (int storeId, LocalDateTime orderDate, Location orderLocation, Map<Integer, Double> orderItemToAmount) {
+    public PlaceOrderRequest(int storeId, Date orderDate, Location orderLocation, Map<Integer, Double> orderItemToAmount) {
         this.storeId = storeId;
         this.orderDate = orderDate;
         this.orderLocation = orderLocation;
@@ -26,11 +27,11 @@ public class CreateOrderRequest {
         this.storeId = storeId;
     }
 
-    public LocalDateTime getOrderDate () {
+    public Date getOrderDate () {
         return orderDate;
     }
 
-    public void setOrderDate (LocalDateTime orderDate) {
+    public void setOrderDate (Date orderDate) {
         this.orderDate = orderDate;
     }
 

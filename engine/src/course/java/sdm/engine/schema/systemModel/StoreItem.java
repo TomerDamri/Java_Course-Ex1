@@ -11,6 +11,18 @@ public class StoreItem {
         this.purchasesCount = 0;
     }
 
+    public int getId () {
+        return pricedItem.getId();
+    }
+
+    public String getName () {
+        return pricedItem.getName();
+    }
+
+    public Item.PurchaseCategory getPurchaseCategory () {
+        return pricedItem.getPurchaseCategory();
+    }
+
     public int getPrice () {
         return pricedItem.getPrice();
     }
@@ -25,6 +37,14 @@ public class StoreItem {
 
     public void setPurchasesCount (int purchasesCount) {
         this.purchasesCount = purchasesCount;
+    }
+
+    public PricedItem getPricedItem() {
+        return pricedItem;
+    }
+
+    public void setPricedItem(PricedItem pricedItem) {
+        this.pricedItem = pricedItem;
     }
 
     @Override

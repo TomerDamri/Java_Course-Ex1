@@ -6,13 +6,25 @@ public class PricedItem {
     private final Item item;
     private int price;
 
-    public PricedItem(Item item, int price) {
+    public Item getItem() {
+        return item;
+    }
+
+    public PricedItem (Item item, int price) {
         this.item = item;
         this.price = price;
     }
 
-    public Item getItem () {
-        return item;
+    public int getId () {
+        return item.getId();
+    }
+
+    public String getName () {
+        return item.getName();
+    }
+
+    public Item.PurchaseCategory getPurchaseCategory () {
+        return item.getPurchaseCategory();
     }
 
     public int getPrice () {

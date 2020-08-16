@@ -47,11 +47,11 @@ public class FileManager {
     }
 
     public Descriptor loadDataFromGeneratedData (SuperDuperMarketDescriptor superDuperMarketDescriptor) {
-        Items items = mapper.mapGeneratedItemsToItems(superDuperMarketDescriptor.getSDMItems());
-        Stores stores = mapper.mapGeneratedStoresToStores(superDuperMarketDescriptor.getSDMStores(), items);
+        Items items = mapper.generatedItemsToItems(superDuperMarketDescriptor.getSDMItems());
+        Stores stores = mapper.generatedStoresToStores(superDuperMarketDescriptor.getSDMStores(), items);
         validator.validateItemsAndStores(items, stores);
 
-        return mapper.mapToDescriptor(items, stores);
+        return mapper.toDescriptor(items, stores);
     }
 
     private SuperDuperMarketDescriptor deserializeFrom (InputStream in) throws JAXBException {

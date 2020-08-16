@@ -14,35 +14,33 @@ import examples.jaxb.schema.generated.*;
 
 public class Mapper {
 
-    public Items mapGeneratedItemsToItems (SDMItems generatedItems) {
+    public Items generatedItemsToItems(SDMItems generatedItems) {
         if (generatedItems == null) {
             return null;
         }
 
-        return mapToItems(generatedItems);
+        return toItems(generatedItems);
     }
 
-    public Stores mapGeneratedStoresToStores (SDMStores generatedStores, Items items) {
+    public Stores generatedStoresToStores(SDMStores generatedStores, Items items) {
         if (generatedStores == null) {
             return null;
         }
-        return mapToStores(generatedStores, items);
+        return toStores(generatedStores, items);
     }
 
-    public Descriptor mapToDescriptor (Items items, Stores stores) {
-        Map<Integer, SystemStore> systemStores = fromGeneratedListToMap(new ArrayList<>(stores.getStores().values()),
+    public Descriptor toDescriptor(Items items, Stores stores) {
+        Map<Integer, SystemStore> systemStores = generatedListToMap(new ArrayList<>(stores.getStores().values()),
                                                                         Store::getId,
                                                                         SystemStore::new,
                                                                         Store.class.getSimpleName(),
                                                                         Stores.class.getSimpleName());
-        Map<Integer, SystemItem> systemItemS = mapToSystemItems(items, systemStores.values());
+        Map<Integer, SystemItem> systemItemS = toSystemItems(items, systemStores.values());
 
-        Descriptor descriptor = new Descriptor(systemStores, systemItemS);
-
-        return descriptor;
+        return new Descriptor(systemStores, systemItemS);
     }
 
-    private Map<Integer, SystemItem> mapToSystemItems (Items items, Collection<SystemStore> stores) {
+    private Map<Integer, SystemItem> toSystemItems(Items items, Collection<SystemStore> stores) {
         Map<Integer, StoreItem> storeItems;
         SystemItem systemItem;
         int storesCount;
@@ -54,14 +52,15 @@ public class Mapper {
             avgPrice = 0;
             sumPrices = 0;
             for (SystemStore store : stores) {
-                storeItems = store.getStore().getItemIdToStoreItem();
+                storeItems = store.getItemIdToStoreItem();
                 if (storeItems.containsKey(entry.getKey())) {
                     storesCount++;
                     sumPrices += storeItems.get(entry.getKey()).getPrice();
                 }
             }
             if (storesCount > 0) {
-                avgPrice = sumPrices / storesCount;
+                avgPrice =round(sumPrices / storesCount,2);
+
             }
             systemItem = new SystemItem(entry.getValue());
             systemItem.setAvgPrice(avgPrice);
@@ -72,14 +71,14 @@ public class Mapper {
         return systemItems;
     }
 
-    private Stores mapToStores (SDMStores sdmStores, Items items) {
+    private Stores toStores(SDMStores sdmStores, Items items) {
         if (sdmStores == null) {
             return null;
         }
 
-        Map<Integer, Store> stores = fromGeneratedListToMap(sdmStores.getSDMStore(),
+        Map<Integer, Store> stores = generatedListToMap(sdmStores.getSDMStore(),
                                                             SDMStore::getId,
-                                                            sdmStore -> mapToStore(sdmStore, items),
+                                                            sdmStore -> toStore(sdmStore, items),
                                                             SDMStore.class.getSimpleName(),
                                                             SDMStores.class.getSimpleName());
 
@@ -87,7 +86,7 @@ public class Mapper {
 
     }
 
-    private Location mapToLocation (examples.jaxb.schema.generated.Location generatedLocation) {
+    private Location toLocation(examples.jaxb.schema.generated.Location generatedLocation) {
         if (generatedLocation == null) {
             return null;
         }
@@ -95,7 +94,7 @@ public class Mapper {
         return new Location(generatedLocation.getX(), generatedLocation.getY());
     }
 
-    private Item mapToItem (SDMItem generatedItem) {
+    private Item toItem(SDMItem generatedItem) {
         if (generatedItem == null) {
             return null;
         }
@@ -103,40 +102,40 @@ public class Mapper {
         return new Item(generatedItem.getName(), generatedItem.getPurchaseCategory(), generatedItem.getId());
     }
 
-    private Items mapToItems (SDMItems generatedItems) {
+    private Items toItems(SDMItems generatedItems) {
         if (generatedItems == null) {
             return null;
         }
 
-        Map<Integer, Item> map = fromGeneratedListToMap(generatedItems.getSDMItem(),
+        Map<Integer, Item> map = generatedListToMap(generatedItems.getSDMItem(),
                                                         SDMItem::getId,
-                                                        this::mapToItem,
+                                                        this::toItem,
                                                         Item.class.getSimpleName(),
                                                         Items.class.getSimpleName());
         return new Items(map);
     }
 
-    private Store mapToStore (SDMStore generatedStore, Items items) {
+    private Store toStore(SDMStore generatedStore, Items items) {
         if (generatedStore == null) {
             return null;
         }
 
         return new Store(generatedStore.getName(),
                          generatedStore.getDeliveryPpk(),
-                         mapToLocation(generatedStore.getLocation()),
-                         mapToStoreItems(generatedStore.getSDMPrices(), items),
+                         toLocation(generatedStore.getLocation()),
+                         toStoreItems(generatedStore.getSDMPrices(), items),
                          generatedStore.getId());
     }
 
-    private Map<Integer, StoreItem> mapToStoreItems (SDMPrices sdmPrices, Items items) {
-        return fromGeneratedListToMap(sdmPrices.getSDMSell(),
+    private Map<Integer, StoreItem> toStoreItems(SDMPrices sdmPrices, Items items) {
+        return generatedListToMap(sdmPrices.getSDMSell(),
                                       SDMSell::getItemId,
-                                      sdmSell -> mapToStoreItem(sdmSell, items),
+                                      sdmSell -> toStoreItem(sdmSell, items),
                                       SDMSell.class.getSimpleName(),
                                       SDMPrices.class.getSimpleName());
     }
 
-    private StoreItem mapToStoreItem (SDMSell sdmSell, Items items) {
+    private StoreItem toStoreItem(SDMSell sdmSell, Items items) {
         if (sdmSell == null) {
             return null;
         }
@@ -149,11 +148,11 @@ public class Mapper {
         return new StoreItem(item, sdmSell.getPrice());
     }
 
-    private <K, V, G> Map<K, V> fromGeneratedListToMap (List<G> list,
-                                                        Function<G, K> getKeyFunction,
-                                                        Function<G, V> getValueFunction,
-                                                        String valuesClassName,
-                                                        String valuesComposeClassName) {
+    private <K, V, G> Map<K, V> generatedListToMap(List<G> list,
+                                                   Function<G, K> getKeyFunction,
+                                                   Function<G, V> getValueFunction,
+                                                   String valuesClassName,
+                                                   String valuesComposeClassName) {
         try {
             Map<K, V> map = list.stream().filter(Objects::nonNull).collect(Collectors.toMap(getKeyFunction, getValueFunction));
             if (map.keySet().size() != list.size()) {
@@ -165,5 +164,14 @@ public class Mapper {
         catch (IllegalStateException ex) {
             throw new DuplicateIdsException(valuesClassName, valuesComposeClassName, ex);
         }
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 }

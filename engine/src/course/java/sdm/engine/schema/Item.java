@@ -50,7 +50,6 @@ public class Item {
         return purchaseCategory;
     }
 
-    // todo: update toString with the new members if exist
     @Override
     public String toString () {
         return new StringBuilder().append("Id: ")

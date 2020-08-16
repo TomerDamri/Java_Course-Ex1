@@ -15,52 +15,52 @@ import course.java.sdm.engine.schema.Stores;
 public class Validator {
     private static final String XML_EXTENSION = ".xml";
 
-    public void validateFile (String dataPath) throws FileNotFoundException {
-        validatePathExtension(dataPath, XML_EXTENSION);
-        validateIfFileExist(dataPath);
+    public void validateFile (String filePath) throws FileNotFoundException {
+        validateFileExtension(filePath);
+        validateFileExists(filePath);
     }
 
     public void validateItemsAndStores (Items items, Stores stores) {
-        Set<Integer> allItemsIds = items.getItems().keySet();
-        Set<Integer> allStoresItemsIds = new HashSet<>();
+        Set<Integer> itemsIds = items.getItems().keySet();
+        Set<Integer> suppliedItemsIds = new HashSet<>();
 
-        //validate that all store items exist in items
-        for (Store currStore : stores.getStores().values()) {
-            Set<Integer> allItemIdsInCurrStore = validateStoreItemsExist(allItemsIds, currStore);
-            allStoresItemsIds.addAll(allItemIdsInCurrStore);
+        //validate that all the supplied items exist in items
+        for (Store store : stores.getStores().values()) {
+            Set<Integer> itemsInStoreIds = validateStoreItemsExist(itemsIds, store);
+            suppliedItemsIds.addAll(itemsInStoreIds);
         }
 
-        //validate that all items have (at least one) store that sell it
-        validateItemsExistInStores(allItemsIds, allStoresItemsIds);
+        //validate that all items are supplied in at least 1 store
+        validateAllItemsSupplied(itemsIds, suppliedItemsIds);
     }
 
-    private void validateIfFileExist (String dataPath) throws FileNotFoundException {
-        File file = new File(dataPath);
+    private void validateFileExists(String filePath) throws FileNotFoundException {
+        File file = new File(filePath);
         if (!file.exists()) {
-            throw new FileNotFoundException(String.format("The file : %s doesn't exist", dataPath));
+            throw new FileNotFoundException(String.format("The file : %s doesn't exist", filePath));
         }
     }
 
-    private Set<Integer> validateStoreItemsExist (Set<Integer> allItemsIds, Store currStore) {
-        Set<Integer> allItemIdsInCurrStore = currStore.getItemIdToStoreItem().keySet();
-        if (!allItemsIds.containsAll(allItemIdsInCurrStore)) {
-            // TODO: 08/08/2020 - add item Ids of all items that don't exist in items
-            throw new ItemNotFoundException(currStore.getName());
+    private Set<Integer> validateStoreItemsExist (Set<Integer> itemsIds, Store store) {
+        Set<Integer> itemsInStoreIds = store.getItemIdToStoreItem().keySet();
+        if (!itemsIds.containsAll(itemsInStoreIds)) {
+            itemsInStoreIds.removeAll(itemsIds);
+            throw new ItemNotFoundException(store.getName(), itemsInStoreIds);
         }
 
-        return allItemIdsInCurrStore;
+        return itemsInStoreIds;
     }
 
-    private void validateItemsExistInStores (Set<Integer> allItemsIds, Set<Integer> allStoresItemsIds) {
-        if (!allItemsIds.equals(allStoresItemsIds)) {
-            // TODO: 08/08/2020 - add item Ids + name of all items that don't exist in any store
-            throw new ItemNotExistInStores();
+    private void validateAllItemsSupplied(Set<Integer> items, Set<Integer> suppliedItems) {
+        if (!items.equals(suppliedItems)) {
+         items.removeAll(suppliedItems);
+            throw new ItemNotExistInStores(items);
         }
     }
 
-    private void validatePathExtension (String dataPath, String expectedExtension) {
-        if (!dataPath.endsWith(expectedExtension)) {
-            throw new IllegalFileExtensionException(dataPath, expectedExtension);
+    private void validateFileExtension(String dataPath) {
+        if (!dataPath.endsWith(Validator.XML_EXTENSION)) {
+            throw new IllegalFileExtensionException(dataPath, Validator.XML_EXTENSION);
         }
     }
 }

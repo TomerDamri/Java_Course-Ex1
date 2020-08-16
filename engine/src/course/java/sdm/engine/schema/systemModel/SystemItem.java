@@ -24,6 +24,18 @@ public class SystemItem {
         return item;
     }
 
+    public int getId () {
+        return item.getId();
+    }
+
+    public String getName () {
+        return item.getName();
+    }
+
+    public Item.PurchaseCategory getPurchaseCategory () {
+        return item.getPurchaseCategory();
+    }
+
     public void setStoresCount (int storesCount) {
         this.storesCount = storesCount;
     }

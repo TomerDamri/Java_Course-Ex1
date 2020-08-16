@@ -1,11 +1,14 @@
 package course.java.sdm.engine.exceptions;
 
+import java.util.Set;
+
 public class ItemNotFoundException extends RuntimeException {
-    public ItemNotFoundException (String storeName) {
-        super(String.format("There is a sell item in %s that doesn't exist", storeName));
-    }
 
     public ItemNotFoundException (String itemName, String storeName) {
-        super(String.format("The item: %s is not exist in store %s", itemName, storeName));
+        super(String.format("The item: %s doesn't exist in store %s", itemName, storeName));
+    }
+
+    public ItemNotFoundException (String storeName, Set<Integer> nonExistingItems) {
+        super(String.format("The items: %s don't exist in the store %s",nonExistingItems, storeName));
     }
 }

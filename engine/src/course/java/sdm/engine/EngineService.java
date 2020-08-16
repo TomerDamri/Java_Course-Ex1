@@ -1,24 +1,28 @@
 package course.java.sdm.engine;
 
 import java.io.FileNotFoundException;
+import java.util.Date;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import course.java.sdm.engine.Utils.FileManager;
 import course.java.sdm.engine.Utils.OrdersExecutor;
 import course.java.sdm.engine.Utils.SystemUpdater;
 import course.java.sdm.engine.schema.Descriptor;
 import course.java.sdm.engine.schema.systemModel.Order;
-import dataModel.request.CreateOrderRequest;
-import dataModel.response.CreateOrderResponse;
+import course.java.sdm.engine.schema.systemModel.PricedItem;
+import dataModel.request.PlaceOrderRequest;
 import dataModel.response.GetItemsResponse;
 import dataModel.response.GetOrdersResponse;
 import dataModel.response.GetStoresResponse;
+import dataModel.response.PlaceOrderResponse;
 import examples.jaxb.schema.generated.SuperDuperMarketDescriptor;
 
 public class EngineService {
 
-    private FileManager fileManager = FileManager.getFileManager();
-    private OrdersExecutor ordersExecutor = OrdersExecutor.getOrdersExecutor();
-    private SystemUpdater systemUpdater = SystemUpdater.getSystemUpdater();
+    private final FileManager fileManager = FileManager.getFileManager();
+    private final OrdersExecutor ordersExecutor = OrdersExecutor.getOrdersExecutor();
+    private final SystemUpdater systemUpdater = SystemUpdater.getSystemUpdater();
     private Descriptor descriptor;
 
     public void loadData (String xmlDataFileStr) throws FileNotFoundException {
@@ -26,13 +30,26 @@ public class EngineService {
         this.descriptor = fileManager.loadDataFromGeneratedData(superDuperMarketDescriptor);
     }
 
-    public CreateOrderResponse placeOrder (CreateOrderRequest request) throws Exception {
+    public PlaceOrderResponse placeOrder (PlaceOrderRequest request) throws Exception {
         if (descriptor == null) {
             throw new Exception();
         }
-        Order newOrder = ordersExecutor.createOrder(null, null, null, null);
-//        systemUpdater.completeTheOrder(newOrder);
-        return new CreateOrderResponse(newOrder);
+        Map<PricedItem, Double> pricedItems = request.getOrderItemToAmount()
+                .keySet()
+                .stream()
+                .map(itemId -> descriptor.getSystemStores()
+                        .get(request.getStoreId())
+                        .getItemIdToStoreItem()
+                        .get(itemId)
+                        .getPricedItem())
+                .collect(Collectors.toMap(pricedItem -> pricedItem, pricedItem->request.getOrderItemToAmount().get(pricedItem.getId())));
+//TODO- update date
+        Order newOrder = ordersExecutor.createOrder(descriptor.getSystemStores().get(request.getStoreId()),
+                                                   new Date(),
+                                                    request.getOrderLocation(),
+                pricedItems);
+         systemUpdater.updateSystem(descriptor.getSystemStores().get(request.getStoreId()),newOrder, descriptor);
+        return new PlaceOrderResponse(newOrder.getId());
     }
 
     public boolean isFileLoaded () {
@@ -41,29 +58,6 @@ public class EngineService {
 
     public GetItemsResponse getItems () {
         return new GetItemsResponse(descriptor.getSystemItems());
-        // int storesCount;
-        // double avgPrice;
-        // SystemItem systemItem;
-        // // todo maybe add an indicator to prevent all calculations with every call of "getItems"
-        // if (systemItems == null) {
-        // systemItems = new ArrayList<>();
-        // for (Item item : descriptor.getItems().getItems().values()) {
-        // storesCount = 0;
-        // avgPrice = 0;
-        // for (Store store : descriptor.getStores().getStores().values()) {
-        // if (store.getPrices().getSells().containsKey(item.getId())) {
-        // storesCount++;
-        // avgPrice += store.getPrices().getSells().get(item.getId()).getPrice();
-        // }
-        // }
-        // avgPrice = avgPrice / storesCount;
-        // systemItem = new SystemItem(item);
-        // systemItem.setAvgPrice(avgPrice);
-        // systemItem.setStoresCount(storesCount);
-        // systemItems.add(systemItem);
-        // }
-        // }
-        // return systemItems;
     }
 
     public GetOrdersResponse getOrders () {
@@ -74,26 +68,3 @@ public class EngineService {
         return new GetStoresResponse(descriptor.getSystemStores());
     }
 }
-// SystemStore systemStore;
-// List<StoreItem> storeItems;
-// StoreItem storeItem;
-// // todo maybe add an indicator to prevent all calculations with every call of "getStores"
-// if (systemStores == null) {
-// systemStores = new ArrayList<>();
-//
-// for (Store store : descriptor.getStores().getStores().values()) {
-// storeItems = new ArrayList<>();
-// systemStore = new SystemStore(store);
-// for (int id : store.getPrices().getSells().keySet()) {
-// storeItem = new StoreItem((descriptor.getItems().getItems().get(id)),
-// store.getPrices().getSells().get(id).getPrice());
-// storeItems.add(storeItem);
-// }
-// // TODO: 09/08/2020 - to remove?
-// // systemStore.setStoreItems(storeItems);
-// systemStores.add(systemStore);
-// return systemStores;
-// return null;
-// }
-//
-// }
