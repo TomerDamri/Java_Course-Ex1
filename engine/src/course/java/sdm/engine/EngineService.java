@@ -45,7 +45,7 @@ public class EngineService {
                 .collect(Collectors.toMap(pricedItem -> pricedItem, pricedItem->request.getOrderItemToAmount().get(pricedItem.getId())));
 //TODO- update date
         Order newOrder = ordersExecutor.createOrder(descriptor.getSystemStores().get(request.getStoreId()),
-                                                   new Date(),
+                                                   request.getOrderDate(),
                                                     request.getOrderLocation(),
                 pricedItems);
          systemUpdater.updateSystem(descriptor.getSystemStores().get(request.getStoreId()),newOrder, descriptor);

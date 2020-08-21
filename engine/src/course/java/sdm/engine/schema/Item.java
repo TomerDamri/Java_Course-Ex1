@@ -52,13 +52,7 @@ public class Item {
 
     @Override
     public String toString () {
-        return new StringBuilder().append("Id: ")
-                                  .append(id)
-                                  .append(",\nName: ")
-                                  .append(name)
-                                  .append(",\nPurchase Category: ")
-                                  .append(purchaseCategory)
-                                  .toString();
+        return "Id: " + id + ",\nName: " + name + ",\nPurchase Category: " + purchaseCategory;
 
     }
 

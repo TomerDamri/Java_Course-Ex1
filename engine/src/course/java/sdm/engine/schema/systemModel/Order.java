@@ -11,7 +11,7 @@ public class Order {
     private final Integer id;
     private final Date orderDate;
     private final Location orderLocation;
-    private Map<PricedItem, Double> orderItems;
+    private Map<PricedItem, Double> pricedItems;
     private Integer numOfItemTypes;
     private Integer amountOfItems;
     private Double itemsPrice;
@@ -22,7 +22,7 @@ public class Order {
         this.id = orderId;
         this.orderDate = orderDate;
         this.orderLocation = orderLocation;
-        this.orderItems = new HashMap<>();
+        this.pricedItems = new HashMap<>();
     }
 
     public Double getTotalPrice () {
@@ -61,8 +61,8 @@ public class Order {
         return orderLocation;
     }
 
-    public Map<PricedItem, Double> getOrderItems() {
-        return orderItems;
+    public Map<PricedItem, Double> getPricedItems() {
+        return pricedItems;
     }
 
     public Integer getNumOfItemTypes () {
@@ -83,7 +83,7 @@ public class Order {
 
     @Override
     public String toString () {
-        return new StringBuilder().append("Id: ")
+        return new StringBuilder().append("Order id: ")
                                   .append(id)
                                   .append(",\nDate: ")
                                   .append(orderDate)

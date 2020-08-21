@@ -43,7 +43,7 @@ public class SystemUpdater {
         updateDeliveriesPayment(systemStore, newOrder);
     }
 
-    private void completeTheOrder(SystemStore systemStore, Order newOrder) {
+    private void completeTheOrder (SystemStore systemStore, Order newOrder) {
         setItemTypes(newOrder);
         setItemsAmount(newOrder);
         setItemsPrice(newOrder);
@@ -56,12 +56,12 @@ public class SystemUpdater {
     }
 
     private void setItemTypes (Order newOrder) {
-        newOrder.setNumOfItemTypes(newOrder.getOrderItems().size());
+        newOrder.setNumOfItemTypes(newOrder.getPricedItems().size());
     }
 
     private void setItemsAmount (Order newOrder) {
         int amountOfItems = 0;
-        for (PricedItem pricedItem : newOrder.getOrderItems().keySet()) {
+        for (PricedItem pricedItem : newOrder.getPricedItems().keySet()) {
             amountOfItems += calculateNumOfItemsToAdd(newOrder, pricedItem);
         }
 
@@ -74,14 +74,14 @@ public class SystemUpdater {
             numOfItemsToAdd = 1;
         }
         else {
-            numOfItemsToAdd = newOrder.getOrderItems().get(pricedItem).intValue();
+            numOfItemsToAdd = newOrder.getPricedItems().get(pricedItem).intValue();
         }
         return numOfItemsToAdd;
     }
 
     private void setItemsPrice (Order newOrder) {
         double allItemPrices = 0;
-        for (PricedItem pricedItem : newOrder.getOrderItems().keySet()) {
+        for (PricedItem pricedItem : newOrder.getPricedItems().keySet()) {
             allItemPrices += calculateTotalPriceForItem(newOrder, pricedItem);
         }
 
@@ -90,7 +90,7 @@ public class SystemUpdater {
     }
 
     private double calculateTotalPriceForItem (Order newOrder, PricedItem pricedItem) {
-        return pricedItem.getPrice() * newOrder.getOrderItems().get(pricedItem);
+        return pricedItem.getPrice() * newOrder.getPricedItems().get(pricedItem);
     }
 
     private void setDeliveryPrice (SystemStore systemStore, Order newOrder) {
@@ -113,7 +113,7 @@ public class SystemUpdater {
 
     private void updateStoreAfterOrderCompletion (SystemStore systemStore, Order newOrder) {
         Map<Integer, StoreItem> storeItems = systemStore.getItemIdToStoreItem();
-        Map<PricedItem, Double> allOrderItemsMap = newOrder.getOrderItems();
+        Map<PricedItem, Double> allOrderItemsMap = newOrder.getPricedItems();
         Set<PricedItem> orderItems = allOrderItemsMap.keySet();
 
         for (PricedItem pricedItem : orderItems) {
@@ -128,11 +128,14 @@ public class SystemUpdater {
     }
 
     private void updateSystemItemsAfterOrderCompletion (Map<Integer, SystemItem> allSystemItems, Order newOrder) {
-        Set<PricedItem> orderItems = newOrder.getOrderItems().keySet();
+        Set<PricedItem> orderItems = newOrder.getPricedItems().keySet();
         for (PricedItem pricedItem : orderItems) {
             int itemId = pricedItem.getId();
             SystemItem systemItem = allSystemItems.get(itemId);
-            systemItem.setOrdersCount(systemItem.getOrdersCount() + 1);
+            int numOfItemsToCount = pricedItem.getPurchaseCategory().equals(Item.PurchaseCategory.QUANTITY)
+                        ? newOrder.getPricedItems().get(pricedItem).intValue()
+                        : 1;
+            systemItem.setOrdersCount(systemItem.getOrdersCount() + numOfItemsToCount);
         }
     }
 }

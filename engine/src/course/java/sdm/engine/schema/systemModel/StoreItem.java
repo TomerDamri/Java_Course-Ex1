@@ -39,21 +39,16 @@ public class StoreItem {
         this.purchasesCount = purchasesCount;
     }
 
-    public PricedItem getPricedItem() {
+    public PricedItem getPricedItem () {
         return pricedItem;
     }
 
-    public void setPricedItem(PricedItem pricedItem) {
+    public void setPricedItem (PricedItem pricedItem) {
         this.pricedItem = pricedItem;
     }
 
     @Override
     public String toString () {
-        return new StringBuilder().append("\n{")
-                .append(pricedItem.toString())
-                                  .append(",\nNumber of purchases in store: ")
-                                  .append(purchasesCount)
-                                  .append("}")
-                                  .toString();
+        return pricedItem.toString() + ",\nNumber of purchases in store: " + purchasesCount;
     }
 }

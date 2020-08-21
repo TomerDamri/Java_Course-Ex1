@@ -58,15 +58,12 @@ public class SystemItem {
 
     @Override
     public String toString () {
-        return new StringBuilder().append("\n{")
-                .append(item.toString())
-                                  .append(",\nNumber of stores supplied in: ")
-                                  .append(storesCount)
-                                  .append(",\nAverage price: ")
-                                  .append(avgPrice)
-                                  .append(",\nNumber of purchases: ")
-                                  .append(ordersCount)
-                                  .append("}")
-                                  .toString();
+        StringBuilder builder = new StringBuilder(item.toString()).append(",\nNumber of stores supplied in: ")
+                                                                  .append(storesCount)
+                                                                  .append(",\nAverage price: ")
+                                                                  .append(avgPrice)
+                                                                  .append(",\nNumber of purchases: ")
+                                                                  .append(ordersCount);
+        return builder.toString();
     }
 }

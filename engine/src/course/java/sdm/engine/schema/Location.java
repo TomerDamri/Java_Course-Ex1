@@ -10,15 +10,12 @@ public class Location {
 
     public Location (int x, int y) {
         if (!isValidLocation(x, y)) {
-            throw new IndexOutOfBoundsException(new StringBuilder("The Location (").append(x)
-                                                                                   .append(",")
-                                                                                   .append(y)
-                                                                                   .append(") is not valid because(")
-                                                                                   .append(MIN_VALUE)
-                                                                                   .append("<= X,Y <=")
-                                                                                   .append(MAX_VALUE)
-                                                                                   .append(")")
-                                                                                   .toString());
+            throw new IndexOutOfBoundsException("The Location (" + x +
+                    "," +
+                    y +
+                    ") is not valid. Location should be of range ["+MIN_VALUE +", " +
+                    MAX_VALUE +
+                    "]");
         }
         this.x = x;
         this.y = y;

@@ -56,11 +56,11 @@ public class OrdersExecutor {
         validateItemExistsInStore(pricedItem.getItem(), systemStore);
 
         double value = amount;
-        if (newOrder.getOrderItems().containsKey(pricedItem)) {
-            value += newOrder.getOrderItems().get(pricedItem);
+        if (newOrder.getPricedItems().containsKey(pricedItem)) {
+            value += newOrder.getPricedItems().get(pricedItem);
         }
 
-        newOrder.getOrderItems().put(pricedItem, value);
+        newOrder.getPricedItems().put(pricedItem, value);
     }
 
     private void validateAmount (PricedItem pricedItem, Double amount) {

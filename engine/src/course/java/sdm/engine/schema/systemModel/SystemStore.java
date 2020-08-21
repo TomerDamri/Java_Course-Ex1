@@ -1,6 +1,7 @@
 package course.java.sdm.engine.schema.systemModel;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +56,23 @@ public class SystemStore {
 
     @Override
     public String toString () {
-        return store.toString() + ",\nStore Orders:" + orders.toString() + "'\nTotal deliveries payment:" + totalDeliveriesPayment;
+        StringBuilder builder = new StringBuilder(store.toString()).append("\nStore Orders:\n");
+        if (!orders.isEmpty()) {
+            builder.append("[");
+            Iterator<Order> iterator = orders.iterator();
+            while (iterator.hasNext()) {
+                Order order = iterator.next();
+                builder.append("{").append(order.toString()).append("}");
+                if (iterator.hasNext()) {
+                    builder.append(",\n");
+                }
+            }
+            builder.append("]");
+        }
+        else {
+            builder.append("There are no orders");
+        }
+        builder.append("\nTotal deliveries payment: ").append(totalDeliveriesPayment);
+        return builder.toString();
     }
 }

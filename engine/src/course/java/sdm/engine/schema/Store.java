@@ -1,5 +1,6 @@
 package course.java.sdm.engine.schema;
 
+import java.util.Iterator;
 import java.util.Map;
 
 import course.java.sdm.engine.schema.systemModel.StoreItem;
@@ -58,16 +59,27 @@ public class Store {
 
     @Override
     public String toString () {
-        return new StringBuilder().append("\n{Id: ")
-                                  .append(id)
-                                  .append(",\nName: ")
-                                  .append(name)
-                                  .append(",\nPPK: ")
-                                  .append(deliveryPpk)
-                                  .append(",\n")
-                                  .append(",\nStore Items:")
-                                  .append(itemIdToStoreItem.values().toString())
-                                  .append(" }")
-                                  .toString();
+        StringBuilder builder = new StringBuilder("Store id: ").append(id)
+                                                               .append(",\nName: ")
+                                                               .append(name)
+                                                               .append(",\nPPK: ")
+                                                               .append(deliveryPpk)
+                                                               .append(",\nStore Items:\n");
+        if (!itemIdToStoreItem.isEmpty()) {
+            builder.append("[");
+            Iterator<StoreItem> iterator = itemIdToStoreItem.values().iterator();
+            while (iterator.hasNext()) {
+                StoreItem item = iterator.next();
+                builder.append("{").append(item.toString()).append("}");
+                if (iterator.hasNext()) {
+                    builder.append(",\n");
+                }
+            }
+            builder.append("]");
+        }
+        else {
+            builder.append("There are no items");
+        }
+        return builder.toString();
     }
 }

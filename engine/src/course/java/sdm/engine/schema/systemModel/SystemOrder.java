@@ -30,7 +30,7 @@ public class SystemOrder {
     }
 
     public Map<PricedItem, Double> getOrderItems () {
-        return order.getOrderItems();
+        return order.getPricedItems();
     }
 
     public Integer getNumOfItemTypes () {
@@ -63,12 +63,6 @@ public class SystemOrder {
 
     @Override
     public String toString () {
-        return new StringBuilder().append(order.toString())
-                                  .append(",\nStore Name: ")
-                                  .append(storeName)
-                                  .append(",\nStore id: ")
-                                  .append(storeId)
-                                  .toString();
-
+        return order.toString() + ",\nStore id: " + storeId + ",\nStore Name: " + storeName;
     }
 }
