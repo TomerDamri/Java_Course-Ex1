@@ -5,7 +5,7 @@ import java.math.RoundingMode;
 import java.util.Map;
 import java.util.Set;
 
-import course.java.sdm.engine.mapper.Mapper;
+import course.java.sdm.engine.mapper.GeneratedDataMapper;
 import course.java.sdm.engine.model.*;
 
 public class SystemUpdater {
@@ -97,7 +97,7 @@ public class SystemUpdater {
         double deliveryPrice = calculateDeliveryDistance(orderLocation.getX() - storeLocation.getX(),
                                                          orderLocation.getY() - storeLocation.getY())
                     * systemStore.getDeliveryPpk();
-        deliveryPrice = Mapper.round(deliveryPrice, 2);
+        deliveryPrice = GeneratedDataMapper.round(deliveryPrice, 2);
         newOrder.setDeliveryPrice(deliveryPrice);
     }
 
