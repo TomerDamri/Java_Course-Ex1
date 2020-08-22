@@ -9,6 +9,9 @@ public class ItemNotFoundException extends RuntimeException {
     }
 
     public ItemNotFoundException (String storeName, Set<Integer> nonExistingItems) {
-        super(String.format("The items: %s don't exist in the store %s",nonExistingItems, storeName));
+        super(String.format("The item ids: %s in the store %s %s exist",
+                            nonExistingItems,
+                            storeName,
+                            (nonExistingItems.size() > 1) ? "don't" : "doesn't"));
     }
 }

@@ -3,8 +3,12 @@ package course.java.sdm.console;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Scanner;
 
+import course.java.sdm.engine.controller.ISDMController;
 import course.java.sdm.engine.controller.impl.SDMControllerImpl;
 import model.OrderDTO;
 import model.StoreDTO;
@@ -26,7 +30,7 @@ public class Menu {
 
     protected boolean quit = false;
     private final Scanner scanner = new Scanner(System.in);
-    private final SDMControllerImpl controller = new SDMControllerImpl();
+    private final ISDMController controller = new SDMControllerImpl();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy-HH:mm");
     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy-HH:mm");
     private Map<Integer, StoreDTO> stores;
@@ -320,7 +324,7 @@ public class Menu {
 
     private boolean validateLocation (int orderStoreId, Location location) {
         StoreDTO store = this.stores.get(orderStoreId);
-        return (store.getxCoordinate() != location.x || store.getyCoordinate() != location.y);
+        return (store.get_X_Coordinate() != location.x || store.get_Y_Coordinate() != location.y);
     }
 
     private Map<Integer, Double> getOrderItems (int storeId) {
@@ -452,9 +456,9 @@ public class Menu {
             }
         }
         System.out.println();
-        double distance = calculateDistance((this.stores.get(request.getStoreId()).getxCoordinate()),
+        double distance = calculateDistance((this.stores.get(request.getStoreId()).get_X_Coordinate()),
                                             request.getxCoordinate(),
-                                            this.stores.get(request.getStoreId()).getyCoordinate(),
+                                            this.stores.get(request.getStoreId()).get_Y_Coordinate(),
                                             request.getyCoordinate());
         int ppk = this.stores.get(request.getStoreId()).getDeliveryPpk();
         System.out.println(String.format("Distance form store: %s\nStore PPK: %s\nDelivery price: %s",
@@ -476,7 +480,7 @@ public class Menu {
             return date[0] + date[1];
         }
         catch (Exception exception) {
-           throw new RuntimeException("Invalid date format");
+            throw new RuntimeException("Invalid date format");
         }
 
     }

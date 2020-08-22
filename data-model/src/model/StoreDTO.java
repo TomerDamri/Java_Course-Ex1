@@ -14,7 +14,14 @@ public class StoreDTO {
     private final List<Integer> orders;
     private final double totalDeliveriesPayment;
 
-    public StoreDTO(int id, String name, int deliveryPpk, int xCoordinate, int yCoordinate, Map<Integer, StoreItemDTO> items, List<Integer> orders, double totalDeliveriesPayment) {
+    public StoreDTO (int id,
+                     String name,
+                     int deliveryPpk,
+                     int xCoordinate,
+                     int yCoordinate,
+                     Map<Integer, StoreItemDTO> items,
+                     List<Integer> orders,
+                     double totalDeliveriesPayment) {
         this.id = id;
         this.name = name;
         this.deliveryPpk = deliveryPpk;
@@ -25,46 +32,46 @@ public class StoreDTO {
         this.totalDeliveriesPayment = totalDeliveriesPayment;
     }
 
-    public int getId() {
+    public int getId () {
         return id;
     }
 
-    public String getName() {
+    public String getName () {
         return name;
     }
 
-    public int getDeliveryPpk() {
+    public int getDeliveryPpk () {
         return deliveryPpk;
     }
 
-    public int getxCoordinate() {
+    public int get_X_Coordinate () {
         return xCoordinate;
     }
 
-    public int getyCoordinate() {
+    public int get_Y_Coordinate () {
         return yCoordinate;
     }
 
-    public Map<Integer, StoreItemDTO> getItems() {
+    public Map<Integer, StoreItemDTO> getItems () {
         return items;
     }
 
-    public List<Integer> getOrders() {
+    public List<Integer> getOrders () {
         return orders;
     }
 
-    public double getTotalDeliveriesPayment() {
+    public double getTotalDeliveriesPayment () {
         return totalDeliveriesPayment;
     }
 
     @Override
     public String toString () {
         StringBuilder builder = new StringBuilder("Store id: ").append(id)
-                .append(",\nName: ")
-                .append(name)
-                .append(",\nPPK: ")
-                .append(deliveryPpk)
-                .append(",\nStore Items:\n");
+                                                               .append(",\nName: ")
+                                                               .append(name)
+                                                               .append(",\nPPK: ")
+                                                               .append(deliveryPpk)
+                                                               .append(",\nStore Items:\n");
         if (!items.isEmpty()) {
             builder.append("[");
             Iterator<StoreItemDTO> iterator = items.values().iterator();

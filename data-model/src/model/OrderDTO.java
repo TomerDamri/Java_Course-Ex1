@@ -1,7 +1,6 @@
 package model;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Map;
 
 public class OrderDTO {
@@ -48,11 +47,7 @@ public class OrderDTO {
         return id;
     }
 
-    public void setId (Integer id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getOrderDate() {
+    public LocalDateTime getOrderDate () {
         return orderDate;
     }
 

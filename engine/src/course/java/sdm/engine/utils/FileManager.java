@@ -4,21 +4,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import course.java.sdm.engine.mapper.Mapper;
+import course.java.sdm.engine.mapper.GeneratedDataMapper;
 import course.java.sdm.engine.model.Descriptor;
-import course.java.sdm.engine.model.Items;
-import course.java.sdm.engine.model.Stores;
+import course.java.sdm.engine.model.Item;
+import course.java.sdm.engine.model.Store;
 import examples.jaxb.schema.generated.SuperDuperMarketDescriptor;
 
 public class FileManager {
 
     private final static String JAXB_XML_PACKAGE_NAME = "examples.jaxb.schema.generated";
-    private final static Mapper mapper = new Mapper();
+    private final static GeneratedDataMapper GENERATED_DATA_MAPPER = new GeneratedDataMapper();
     private final static Validator validator = new Validator();
 
     private static FileManager singletonFileManager = null;
@@ -26,7 +27,7 @@ public class FileManager {
     private FileManager () {
     }
 
-    public static FileManager getFileManager() {
+    public static FileManager getFileManager () {
         if (singletonFileManager == null) {
             singletonFileManager = new FileManager();
         }
@@ -48,11 +49,11 @@ public class FileManager {
     }
 
     public Descriptor loadDataFromGeneratedData (SuperDuperMarketDescriptor superDuperMarketDescriptor) {
-        Items items = mapper.generatedItemsToItems(superDuperMarketDescriptor.getSDMItems());
-        Stores stores = mapper.generatedStoresToStores(superDuperMarketDescriptor.getSDMStores(), items);
+        Map<Integer, Item> items = GENERATED_DATA_MAPPER.generatedItemsToItems(superDuperMarketDescriptor.getSDMItems());
+        Map<Integer, Store> stores = GENERATED_DATA_MAPPER.generatedStoresToStores(superDuperMarketDescriptor.getSDMStores(), items);
         validator.validateItemsAndStores(items, stores);
 
-        return mapper.toDescriptor(items, stores);
+        return GENERATED_DATA_MAPPER.toDescriptor(items, stores);
     }
 
     private SuperDuperMarketDescriptor deserializeFrom (InputStream in) throws JAXBException {
