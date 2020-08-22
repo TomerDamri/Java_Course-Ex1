@@ -1,19 +1,19 @@
 package course.java.sdm.console;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import course.java.sdm.engine.EngineService;
-import course.java.sdm.engine.schema.Item;
-import course.java.sdm.engine.schema.Location;
-import course.java.sdm.engine.schema.systemModel.SystemItem;
-import course.java.sdm.engine.schema.systemModel.SystemOrder;
-import course.java.sdm.engine.schema.systemModel.SystemStore;
-import dataModel.request.PlaceOrderRequest;
-import dataModel.response.GetItemsResponse;
-import dataModel.response.GetOrdersResponse;
-import dataModel.response.GetStoresResponse;
-import dataModel.response.PlaceOrderResponse;
+import course.java.sdm.engine.controller.impl.SDMControllerImpl;
+import model.OrderDTO;
+import model.StoreDTO;
+import model.SystemItemDTO;
+import model.request.PlaceOrderRequest;
+import model.response.GetItemsResponse;
+import model.response.GetOrdersResponse;
+import model.response.GetStoresResponse;
+import model.response.PlaceOrderResponse;
 
 public class Menu {
 
@@ -21,13 +21,16 @@ public class Menu {
     private static final int COORDINATE_MAX_VALUE = 50;
     private static final int MIN_MENU_OPTION = 1;
     private static final int MAX_MENU_OPTION = 5;
+    private static final String WEIGHT = "WEIGHT";
+    private static final String QUANTITY = "QUANTITY";
 
     protected boolean quit = false;
     private final Scanner scanner = new Scanner(System.in);
-    private final EngineService service = new EngineService();
-    private final SimpleDateFormat format = new SimpleDateFormat("dd/MM-hh:mm");
-    private Map<Integer, SystemStore> stores;
-    private Map<Integer, SystemItem> items;
+    private final SDMControllerImpl controller = new SDMControllerImpl();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy-HH:mm");
+    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy-HH:mm");
+    private Map<Integer, StoreDTO> stores;
+    private Map<Integer, SystemItemDTO> items;
 
     public void displayMenu () {
         do {
@@ -77,7 +80,7 @@ public class Menu {
             handleLoadData();
         }
         else {
-            if (!service.isFileLoaded()) {
+            if (!controller.isFileLoaded()) {
                 System.out.println("Your request could not be processed, please load system data first");
             }
             else {
@@ -105,7 +108,7 @@ public class Menu {
         System.out.println("Please enter full path of XML data file");
         String userInput = scanner.nextLine();
         try {
-            service.loadData(userInput);
+            controller.loadFile(userInput);
             System.out.println("File loaded successfully");
         }
         catch (Exception e) {
@@ -114,75 +117,90 @@ public class Menu {
     }
 
     private void handleDisplayStores () {
-        GetStoresResponse response = service.getStores();
-        this.stores = response.getStores();
-        if (this.stores != null && !this.stores.isEmpty()) {
-            Iterator<SystemStore> iterator = this.stores.values().iterator();
-            while (iterator.hasNext()) {
-                SystemStore store = iterator.next();
-                System.out.print("{" + store + "}");
-                if (iterator.hasNext()) {
-                    System.out.println(",");
+        try {
+            GetStoresResponse response = controller.getStores();
+            this.stores = response.getStores();
+            if (this.stores != null && !this.stores.isEmpty()) {
+                Iterator<StoreDTO> iterator = this.stores.values().iterator();
+                while (iterator.hasNext()) {
+                    StoreDTO store = iterator.next();
+                    System.out.print("{" + store + "}");
+                    if (iterator.hasNext()) {
+                        System.out.println(",");
+                    }
                 }
             }
+            else {
+                System.out.println("No stored have yet been loaded");
+            }
         }
-        else {
-            System.out.println("No stored have yet been loaded");
+        catch (Exception exception) {
+            System.out.println(exception.getMessage());
         }
     }
 
     private void handleDisplayItems () {
-        GetItemsResponse response = service.getItems();
-        this.items = response.getItems();
-        if (this.items != null && !this.items.isEmpty()) {
-            Iterator<SystemItem> iterator = this.items.values().iterator();
-            while (iterator.hasNext()) {
-                SystemItem item = iterator.next();
-                System.out.print("{" + item + "}");
-                if (iterator.hasNext()) {
-                    System.out.println(",");
+        try {
+            GetItemsResponse response = controller.getItems();
+            this.items = response.getItems();
+            if (this.items != null && !this.items.isEmpty()) {
+                Iterator<SystemItemDTO> iterator = this.items.values().iterator();
+                while (iterator.hasNext()) {
+                    SystemItemDTO item = iterator.next();
+                    System.out.print("{" + item + "}");
+                    if (iterator.hasNext()) {
+                        System.out.println(",");
+                    }
                 }
             }
+            else {
+                System.out.println("No items have yet been loaded");
+            }
         }
-        else {
-            System.out.println("No items have yet been loaded");
+        catch (Exception exception) {
+            System.out.println(exception.getMessage());
         }
     }
 
     private void handleDisplayOrders () {
-        GetOrdersResponse response = service.getOrders();
-        if (response.getOrders() != null && !response.getOrders().isEmpty()) {
-            Iterator<SystemOrder> iterator = response.getOrders().values().iterator();
-            while (iterator.hasNext()) {
-                SystemOrder order = iterator.next();
-                System.out.print("{" + order + "}");
-                if (iterator.hasNext()) {
-                    System.out.println(",");
+        try {
+            GetOrdersResponse response = controller.getOrders();
+            if (response.getOrders() != null && !response.getOrders().isEmpty()) {
+                Iterator<OrderDTO> iterator = response.getOrders().values().iterator();
+                while (iterator.hasNext()) {
+                    OrderDTO order = iterator.next();
+                    System.out.print("{" + order + "}");
+                    if (iterator.hasNext()) {
+                        System.out.println(",");
+                    }
                 }
             }
+            else {
+                System.out.println("No orders have yet been placed");
+            }
         }
-        else {
-            System.out.println("No orders have yet been placed");
+        catch (Exception exception) {
+            System.out.println(exception.getMessage());
         }
     }
 
     private void handlePlaceOrder () {
         int orderStoreId = getOrderStore();
-        Date date = getOrderDate();
+        LocalDateTime date = getOrderDate();
         Location location = getOrderLocation(orderStoreId);
         Map<Integer, Double> orderItemToAmount = getOrderItems(orderStoreId);
         if (orderItemToAmount.isEmpty()) {
             System.out.println("No items were selected, the order is canceled");
         }
         else {
-            PlaceOrderRequest request = new PlaceOrderRequest(orderStoreId, date, location, orderItemToAmount);
+            PlaceOrderRequest request = new PlaceOrderRequest(orderStoreId, date, location.x, location.y, orderItemToAmount);
             printOrderSummary(request);
             System.out.println(("Enter 'Y' to confirm or any other key to cancel the order"));
             String userInput = scanner.nextLine();
             if (userInput.equals("Y") || userInput.equals("y")) {
 
                 try {
-                    PlaceOrderResponse response = service.placeOrder(request);
+                    PlaceOrderResponse response = controller.placeOrder(request);
                     System.out.println("Order created successfully\nOrder id:" + response.getOrderId());
                 }
                 catch (Exception exception) {
@@ -220,7 +238,7 @@ public class Menu {
 
     private void displayStoresBeforePlacingOrder () {
         if (this.stores == null || this.stores.isEmpty()) {
-            this.stores = service.getStores().getStores();
+            this.stores = controller.getStores().getStores();
         }
         this.stores.values()
                    .forEach(store -> System.out.println(String.format("{Id: %s\nName: %s\nDelivery PPK: %s},",
@@ -231,35 +249,33 @@ public class Menu {
 
     private boolean validateStoreId (int id) {
         if (this.stores == null || this.stores.isEmpty()) {
-            this.stores = service.getStores().getStores();
+            this.stores = controller.getStores().getStores();
         }
         return stores.containsKey(id);
     }
 
-    private Date getOrderDate () {
-        Date date = null;
-        boolean stop = true;
+    private LocalDateTime getOrderDate () {
+        LocalDateTime localDateTime = null;
+        boolean stop;
         do {
-            if (!stop) {
-                System.out.println("Invalid date");
-            }
-            System.out.println(String.format("Please enter the order date in the following format '%s':", format.toPattern()));
+            System.out.println(String.format("Please enter the order date in the following format dd/MM-hh:mm"));
             String userInput = scanner.nextLine();
             try {
-                date = format.parse(userInput);
-                date.setYear(new Date().getYear());
+                String dateWithYear = concatYearToDate(userInput);
+                localDateTime = LocalDateTime.parse(dateWithYear, formatter);
                 stop = true;
             }
             catch (Exception exception) {
+                System.out.println(exception.getMessage());
                 stop = false;
             }
         }
         while (!stop);
-        return date;
+        return localDateTime;
     }
 
     private Location getOrderLocation (int orderStoreId) {
-        boolean validLocation = true;
+        boolean validLocation;
         Location location;
         do {
             System.out.println("Please enter your location.\nThe x coordinate:");
@@ -303,15 +319,15 @@ public class Menu {
     }
 
     private boolean validateLocation (int orderStoreId, Location location) {
-        SystemStore store = this.stores.get(orderStoreId);
-        return !store.getLocation().equals(location);
+        StoreDTO store = this.stores.get(orderStoreId);
+        return (store.getxCoordinate() != location.x || store.getyCoordinate() != location.y);
     }
 
     private Map<Integer, Double> getOrderItems (int storeId) {
         Map<Integer, Double> itemsToAmount = new HashMap<>();
         boolean doneSelectingItems = false;
-        int itemId = 0;
-        double itemAmount = 0;
+        int itemId;
+        double itemAmount;
         do {
             System.out.println("Please select items to order. Press 'q' when done selecting");
             itemId = selectItem(storeId);
@@ -333,7 +349,7 @@ public class Menu {
     }
 
     private int selectItem (int storeId) {
-        boolean isValidItem = true;
+        boolean isValidItem;
         String userInput;
         int itemId = -1;
         do {
@@ -364,12 +380,12 @@ public class Menu {
     }
 
     private void displayItemsBeforePlacingOrder (int storeId) {
-        stores = service.getStores().getStores();
-        items = service.getItems().getItems();
-        SystemStore store = this.stores.get(storeId);
+        stores = controller.getStores().getStores();
+        items = controller.getItems().getItems();
+        StoreDTO store = this.stores.get(storeId);
         items.keySet().forEach(itemId -> {
-            if (store.getItemIdToStoreItem().containsKey(itemId)) {
-                System.out.println("{" + store.getItemIdToStoreItem().get(itemId).getPricedItem().toString() + "}");
+            if (store.getItems().containsKey(itemId)) {
+                System.out.println("{" + store.getItems().get(itemId).getPricedItem().toString() + "}");
             }
             else {
                 System.out.print("{" + items.get(itemId).getItem().toString() + ",\nThis item is not supplied in the store}\n");
@@ -378,11 +394,11 @@ public class Menu {
     }
 
     private boolean validateItemId (int itemId, int storeId) {
-        return this.stores.get(storeId).getItemIdToStoreItem().containsKey(itemId);
+        return this.stores.get(storeId).getItems().containsKey(itemId);
     }
 
     private double getItemAmount (int itemId, int storeId) {
-        boolean isValidAmount = true;
+        boolean isValidAmount;
         double itemAmount = 0;
         do {
             System.out.println("Please enter the amount that you want to order");
@@ -410,7 +426,7 @@ public class Menu {
         }
         // Not an integer is ok only if purchase category is weight
         else if (itemAmount.intValue() < itemAmount) {
-            return this.items.get(itemId).getPurchaseCategory().equals(Item.PurchaseCategory.WEIGHT);
+            return this.items.get(itemId).getPurchaseCategory().equals(WEIGHT);
         }
         return true;
     }
@@ -420,9 +436,9 @@ public class Menu {
         Iterator<Integer> iterator = request.getOrderItemToAmount().keySet().iterator();
         while (iterator.hasNext()) {
             Integer itemId = iterator.next();
-            SystemItem item = items.get(itemId);
+            SystemItemDTO item = items.get(itemId);
             double amount = request.getOrderItemToAmount().get(itemId);
-            int itemPrice = stores.get(request.getStoreId()).getItemIdToStoreItem().get(itemId).getPrice();
+            int itemPrice = stores.get(request.getStoreId()).getItems().get(itemId).getPrice();
 
             System.out.print(String.format("{Item id: %s,\nItem name: %s,\nPurchase category: %s,\nPrice: %s,\nAmount: %s,\nTotal item price: %s}",
                                            itemId,
@@ -436,15 +452,33 @@ public class Menu {
             }
         }
         System.out.println();
-        double distance = round(calculateDistance(stores.get(request.getStoreId()).getLocation(), request.getOrderLocation()), 2);
-        int ppk = stores.get(request.getStoreId()).getDeliveryPpk();
-        System.out.println(String.format("Distance form store: %s\nStore PPK: %s\nDelivery price: %s", distance, ppk, distance * ppk));
+        double distance = calculateDistance((this.stores.get(request.getStoreId()).getxCoordinate()),
+                                            request.getxCoordinate(),
+                                            this.stores.get(request.getStoreId()).getyCoordinate(),
+                                            request.getyCoordinate());
+        int ppk = this.stores.get(request.getStoreId()).getDeliveryPpk();
+        System.out.println(String.format("Distance form store: %s\nStore PPK: %s\nDelivery price: %s",
+                                         distance,
+                                         ppk,
+                                         round(distance * ppk, 2)));
 
     }
 
-    private double calculateDistance (Location storeLocation, Location orderLocation) {
-        return Math.sqrt(Math.pow(orderLocation.getX() - storeLocation.getX(), 2)
-                    + Math.pow(orderLocation.getY() - storeLocation.getY(), 2));
+    private double calculateDistance (int x1, int x2, int y1, int y2) {
+        return round(Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)), 2);
+    }
+
+    public static String concatYearToDate (String dateTime) {
+        int year = LocalDateTime.now().getYear();
+        try {
+            String[] date = dateTime.split("-");
+            date[0] = date[0] + "/" + year + "-";
+            return date[0] + date[1];
+        }
+        catch (Exception exception) {
+           throw new RuntimeException("Invalid date format");
+        }
+
     }
 
     public static double round (double value, int places) {
@@ -455,5 +489,15 @@ public class Menu {
         value = value * factor;
         long tmp = Math.round(value);
         return (double) tmp / factor;
+    }
+
+    private static class Location {
+        private int x;
+        private int y;
+
+        public Location (int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
     }
 }
