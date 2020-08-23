@@ -1,10 +1,11 @@
 package course.java.sdm.engine.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Order {
+public class Order implements Serializable {
 
     private final Integer id;
     private final LocalDateTime orderDate;

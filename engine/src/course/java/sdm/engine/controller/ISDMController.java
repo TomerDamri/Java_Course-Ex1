@@ -28,4 +28,8 @@ public interface ISDMController {
                                                  LocalDateTime orderDate);
 
     void completeDynamicOrder (int dynamicOrderId, boolean toConfirmNewDynamicOrder);
+
+    void saveSystemToFile (String path);
+
+    void loadDataFromFile (String path);
 }

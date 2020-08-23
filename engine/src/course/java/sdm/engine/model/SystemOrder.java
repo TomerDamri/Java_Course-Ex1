@@ -1,9 +1,10 @@
 package course.java.sdm.engine.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-public class SystemOrder {
+public class SystemOrder implements Serializable {
 
     private final Order order;
     private final String storeName;

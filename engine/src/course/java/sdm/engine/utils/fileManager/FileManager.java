@@ -1,15 +1,14 @@
 package course.java.sdm.engine.utils.fileManager;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import course.java.sdm.engine.exceptions.FileNotLoadedException;
+import course.java.sdm.engine.exceptions.FileNotSaveException;
 import course.java.sdm.engine.mapper.GeneratedDataMapper;
 import course.java.sdm.engine.model.Descriptor;
 import course.java.sdm.engine.model.Item;
@@ -54,6 +53,48 @@ public class FileManager {
         FILE_MANAGER_VALIDATOR.validateItemsAndStores(items, stores);
 
         return GENERATED_DATA_MAPPER.toDescriptor(items, stores);
+    }
+
+    public void saveSystemToFile (Descriptor descriptor, String path) {
+        if (descriptor == null) {
+            throw new FileNotLoadedException();
+        }
+
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(path);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(descriptor);
+            objectOutputStream.flush();
+            objectOutputStream.close();
+        }
+        catch (FileNotFoundException ex) {
+            throw new FileNotSaveException(String.format("Failed to save file : %s because the file not found", path));
+        }
+        catch (IOException ex) {
+            throw new FileNotSaveException(String.format("Failed to save file : %s.\nError message: %s ", path, ex.getMessage()));
+        }
+    }
+
+    public Descriptor loadDataFromFile (String path) {
+        try {
+            FileInputStream fileInputStream = new FileInputStream(path);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            Descriptor descriptor = (Descriptor) objectInputStream.readObject();
+            objectInputStream.close();
+
+            return descriptor;
+        }
+        catch (FileNotFoundException ex) {
+            throw new FileNotLoadedException(String.format("Failed to load file : %s because the file not found", path));
+        }
+        catch (ClassNotFoundException ex) {
+            throw new FileNotLoadedException(String.format("Failed to load file : %s because the class %s not found",
+                                                           path,
+                                                           Descriptor.class.getSimpleName()));
+        }
+        catch (IOException ex) {
+            throw new FileNotLoadedException(String.format("Failed to load file : %s.\nError message: %s ", path, ex.getMessage()));
+        }
     }
 
     private SuperDuperMarketDescriptor deserializeFrom (InputStream in) throws JAXBException {

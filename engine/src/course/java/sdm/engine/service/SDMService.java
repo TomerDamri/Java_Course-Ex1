@@ -109,6 +109,15 @@ public class SDMService {
         systemUpdater.updateSystemAfterDynamicOrder(dynamicOrderId, toConfirmNewDynamicOrder, descriptor);
     }
 
+    public void saveSystemToFile (String path) {
+        fileManager.saveSystemToFile(descriptor, path);
+    }
+
+    public void loadDataFromFile (String path) {
+        Descriptor descriptor = fileManager.loadDataFromFile(path);
+        this.descriptor = descriptor;
+    }
+
     private Order addNewStaticOrder (PlaceOrderRequest request, Map<PricedItem, Double> pricedItems) {
         SystemStore systemStore = descriptor.getSystemStores().get(request.getStoreId());
         LocalDateTime orderDate = request.getOrderDate();

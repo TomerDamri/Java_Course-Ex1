@@ -1,6 +1,8 @@
 package course.java.sdm.engine.model;
 
-public class PricedItem {
+import java.io.Serializable;
+
+public class PricedItem implements Serializable {
     private final Item item;
     private int price;
 

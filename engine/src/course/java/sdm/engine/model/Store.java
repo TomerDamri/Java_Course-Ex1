@@ -1,9 +1,10 @@
 package course.java.sdm.engine.model;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 
-public class Store {
+public class Store implements Serializable {
     private StoreDetails storeDetails;
     private Map<Integer, StoreItem> itemIdToStoreItem;
 

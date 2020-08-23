@@ -1,6 +1,8 @@
 package course.java.sdm.engine.model;
 
-public class Item {
+import java.io.Serializable;
+
+public class Item implements Serializable {
 
     public enum PurchaseCategory {
         QUANTITY, WEIGHT;

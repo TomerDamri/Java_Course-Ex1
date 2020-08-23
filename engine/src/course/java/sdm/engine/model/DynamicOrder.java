@@ -1,8 +1,9 @@
 package course.java.sdm.engine.model;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class DynamicOrder {
+public class DynamicOrder implements Serializable {
 
     private int orderId;
     private boolean isConfirmed;

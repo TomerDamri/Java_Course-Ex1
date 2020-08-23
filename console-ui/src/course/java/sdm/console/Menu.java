@@ -36,6 +36,16 @@ public class Menu {
     private Map<Integer, StoreDTO> stores;
     private Map<Integer, SystemItemDTO> items;
 
+    public void saveDataToFile () {
+        String path = "C:\\Users\\97205\\Downloads\\descriptor.txt";
+        controller.saveSystemToFile(path);
+    }
+
+    public void loadDataFromFile () {
+        String path = "C:\\Users\\97205\\Downloads\\descriptor.txt";
+        controller.loadDataFromFile(path);
+    }
+
     public void displayMenu () {
         do {
             printMenuOptions();
@@ -48,7 +58,7 @@ public class Menu {
     }
 
     private void printMenuOptions () {
-        System.out.println("\nPlease choose one of the following options, or press 'q' to quit:\n1. Load system data from file\n2. Display stores\n3. Display items\n4. Place new order\n5. Display orders history\n");
+        System.out.println("\n\nPlease choose one of the following options, or press 'q' to quit:\n1. Load system data from file\n2. Display stores\n3. Display items\n4. Place new order\n5. Display orders history\n");
     }
 
     private int getUserChoice () {
@@ -204,7 +214,7 @@ public class Menu {
             if (userInput.equals("Y") || userInput.equals("y")) {
 
                 try {
-                    PlaceOrderResponse response = controller.placeOrder(request);
+                    PlaceOrderResponse response = controller.placeStaticOrder(request);
                     System.out.println("Order created successfully\nOrder id:" + response.getOrderId());
                 }
                 catch (Exception exception) {

@@ -59,4 +59,14 @@ public class SDMControllerImpl implements ISDMController {
     public void completeDynamicOrder (int dynamicOrderId, boolean toConfirmNewDynamicOrder) {
         service.completeDynamicOrder(dynamicOrderId, toConfirmNewDynamicOrder);
     }
+
+    @Override
+    public void saveSystemToFile (String path) {
+        service.saveSystemToFile(path);
+    }
+
+    @Override
+    public void loadDataFromFile (String path) {
+        service.loadDataFromFile(path);
+    }
 }

@@ -1,8 +1,9 @@
 package course.java.sdm.engine.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Location {
+public class Location implements Serializable {
     private final Integer MIN_VALUE = 0;
     private final Integer MAX_VALUE = 50;
     private int y;
@@ -10,12 +11,8 @@ public class Location {
 
     public Location (int x, int y) {
         if (!isValidLocation(x, y)) {
-            throw new IndexOutOfBoundsException("The Location (" + x +
-                    "," +
-                    y +
-                    ") is not valid. Location should be of range ["+MIN_VALUE +", " +
-                    MAX_VALUE +
-                    "]");
+            throw new IndexOutOfBoundsException("The Location (" + x + "," + y + ") is not valid. Location should be of range [" + MIN_VALUE
+                        + ", " + MAX_VALUE + "]");
         }
         this.x = x;
         this.y = y;
@@ -30,16 +27,17 @@ public class Location {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals (Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Location location = (Location) o;
-        return y == location.y &&
-                x == location.x;
+        return y == location.y && x == location.x;
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode () {
         return Objects.hash(MIN_VALUE, MAX_VALUE, y, x);
     }
 

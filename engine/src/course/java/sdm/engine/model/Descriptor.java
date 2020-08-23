@@ -1,9 +1,10 @@
 package course.java.sdm.engine.model;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class Descriptor {
+public class Descriptor implements Serializable {
 
     private static Integer numOfOrders = 1;
     private static Integer numOfDynamicOrders = 1;

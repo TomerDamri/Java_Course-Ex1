@@ -1,11 +1,12 @@
 package course.java.sdm.engine.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class SystemStore {
+public class SystemStore implements Serializable {
 
     private Store store;
     private List<Order> orders;

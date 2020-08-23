@@ -1,6 +1,8 @@
 package course.java.sdm.engine.model;
 
-public class StoreItem {
+import java.io.Serializable;
+
+public class StoreItem implements Serializable {
     private PricedItem pricedItem;
     private int purchasesCount;
 
