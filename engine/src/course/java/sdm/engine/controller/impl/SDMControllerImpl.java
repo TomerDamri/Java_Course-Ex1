@@ -6,6 +6,7 @@ import java.util.Map;
 
 import course.java.sdm.engine.controller.ISDMController;
 import course.java.sdm.engine.service.SDMService;
+import model.request.PlaceDynamicOrderRequest;
 import model.request.PlaceOrderRequest;
 import model.response.*;
 
@@ -48,11 +49,8 @@ public class SDMControllerImpl implements ISDMController {
     }
 
     @Override
-    public PlaceDynamicOrderResponse placeDynamicOrder (Map<Integer, Double> orderItemToAmount,
-                                                        final int xCoordinate,
-                                                        final int yCoordinate,
-                                                        LocalDateTime orderDate) {
-        return service.placeDynamicOrder(orderItemToAmount, xCoordinate, yCoordinate, orderDate);
+    public PlaceDynamicOrderResponse placeDynamicOrder (PlaceDynamicOrderRequest request) {
+        return service.placeDynamicOrder(request);
     }
 
     @Override
@@ -61,12 +59,12 @@ public class SDMControllerImpl implements ISDMController {
     }
 
     @Override
-    public void saveSystemToFile (String path) {
+    public void saveOrdersHistoryToFile(String path) {
         service.saveSystemToFile(path);
     }
 
     @Override
-    public void loadDataFromFile (String path) {
+    public void loadOrdersHistoryFromFile(String path) {
         service.loadDataFromFile(path);
     }
 }

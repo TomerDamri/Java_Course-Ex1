@@ -1,9 +1,8 @@
 package course.java.sdm.engine.controller;
 
 import java.io.FileNotFoundException;
-import java.time.LocalDateTime;
-import java.util.Map;
 
+import model.request.PlaceDynamicOrderRequest;
 import model.request.PlaceOrderRequest;
 import model.response.*;
 
@@ -22,14 +21,11 @@ public interface ISDMController {
 
     boolean isValidLocation (final int xCoordinate, final int yCoordinate);
 
-    PlaceDynamicOrderResponse placeDynamicOrder (Map<Integer, Double> orderItemToAmount,
-                                                 final int xCoordinate,
-                                                 final int yCoordinate,
-                                                 LocalDateTime orderDate);
+    PlaceDynamicOrderResponse placeDynamicOrder (PlaceDynamicOrderRequest request);
 
     void completeDynamicOrder (int dynamicOrderId, boolean toConfirmNewDynamicOrder);
 
-    void saveSystemToFile (String path);
+    void saveOrdersHistoryToFile(String path);
 
-    void loadDataFromFile (String path);
+    void loadOrdersHistoryFromFile(String path);
 }

@@ -6,29 +6,29 @@ public class DynamicOrderEntityDTO {
     private final String storeName;
     private final int xCoordinate;
     private final int yCoordinate;
-    private final Double distanceFromCustomerLocation;
+    private final Double distanceFromCustomer;
     private final Integer ppk;
     private final Integer totalItemTypes;
-    private final Double totalDeliveryPrice;
+    private final Double deliveryPrice;
     private final Double totalPrice;
 
-    public DynamicOrderEntityDTO(Integer storeId,
-                                 String storeName,
-                                 int xCoordinate,
-                                 int yCoordinate,
-                                 Double distanceFromCustomerLocation,
-                                 Integer ppk,
-                                 Integer totalItemTypes,
-                                 Double totalDeliveryPrice,
-                                 Double totalPrice) {
+    public DynamicOrderEntityDTO (Integer storeId,
+                                  String storeName,
+                                  int xCoordinate,
+                                  int yCoordinate,
+                                  Double distanceFromCustomer,
+                                  Integer ppk,
+                                  Integer totalItemTypes,
+                                  Double deliveryPrice,
+                                  Double totalPrice) {
         this.storeId = storeId;
         this.storeName = storeName;
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
-        this.distanceFromCustomerLocation = distanceFromCustomerLocation;
+        this.distanceFromCustomer = distanceFromCustomer;
         this.ppk = ppk;
         this.totalItemTypes = totalItemTypes;
-        this.totalDeliveryPrice = totalDeliveryPrice;
+        this.deliveryPrice = deliveryPrice;
         this.totalPrice = totalPrice;
     }
 
@@ -40,16 +40,16 @@ public class DynamicOrderEntityDTO {
         return storeName;
     }
 
-    public int getX_Coordinate() {
+    public int getX_Coordinate () {
         return xCoordinate;
     }
 
-    public int getY_Coordinate() {
+    public int getY_Coordinate () {
         return yCoordinate;
     }
 
-    public final Double getDistanceFromCustomerLocation () {
-        return distanceFromCustomerLocation;
+    public final Double getDistanceFromCustomer() {
+        return distanceFromCustomer;
     }
 
     public final Integer getPpk () {
@@ -60,11 +60,34 @@ public class DynamicOrderEntityDTO {
         return totalItemTypes;
     }
 
-    public final Double getTotalDeliveryPrice () {
-        return totalDeliveryPrice;
+    public final Double getDeliveryPrice() {
+        return deliveryPrice;
     }
 
     public final Double getTotalPrice () {
         return totalPrice;
+    }
+
+    @Override
+    public String toString () {
+        return new StringBuilder("Store id: ").append(storeId)
+                                              .append(",\nStore name: ")
+                                              .append(storeName)
+                                              .append(",\nStore location: [")
+                                              .append(xCoordinate)
+                                              .append(",")
+                                              .append(yCoordinate)
+                                              .append("],\nDistance from store:")
+                                              .append(distanceFromCustomer)
+                                              .append(",\nDelivery PPK: ")
+                                              .append(ppk)
+                                              .append(",\nNumber of item types: ")
+                                              .append(totalItemTypes)
+                                              .append(",\nDelivery price: ")
+                                              .append(deliveryPrice)
+                                              .append(",\nTotal price: ")
+                                              .append(totalPrice)
+                                              .toString();
+
     }
 }

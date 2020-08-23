@@ -16,6 +16,7 @@ import course.java.sdm.engine.utils.ordersCreator.OrdersCreator;
 import course.java.sdm.engine.utils.systemUpdater.SystemUpdater;
 import examples.jaxb.schema.generated.SuperDuperMarketDescriptor;
 import model.DynamicOrderEntityDTO;
+import model.request.PlaceDynamicOrderRequest;
 import model.request.PlaceOrderRequest;
 import model.response.*;
 
@@ -79,23 +80,20 @@ public class SDMService {
         return !allStoresLocations.contains(userLocation);
     }
 
-    public PlaceDynamicOrderResponse placeDynamicOrder (final Map<Integer, Double> orderItemToAmount,
-                                                        final int xCoordinate,
-                                                        final int yCoordinate,
-                                                        LocalDateTime orderDate) {
+    public PlaceDynamicOrderResponse placeDynamicOrder (PlaceDynamicOrderRequest request) {
         if (descriptor == null) {
             throw new FileNotLoadedException();
         }
 
-        Location orderLocation = new Location(xCoordinate, yCoordinate);
-        List<SystemItem> systemItemsIncludedInOrder = getItemsFromDynamicOrderRequest(orderItemToAmount);
+        Location orderLocation = new Location(request.getxCoordinate(), request.getyCoordinate());
+        List<SystemItem> systemItemsIncludedInOrder = getItemsFromDynamicOrderRequest(request.getOrderItemToAmount());
         Set<SystemStore> storesIncludedInOrder = getIncludedStoresInOrder(systemItemsIncludedInOrder);
 
         Map<StoreDetails, Order> staticOrders = storesIncludedInOrder.stream()
                                                                      .collect(Collectors.toMap(systemStore -> systemStore.getStore()
                                                                                                                          .getStoreDetails(),
-                                                                                               createSubOrder(orderItemToAmount,
-                                                                                                              orderDate,
+                                                                                               createSubOrder(request.getOrderItemToAmount(),
+                                                                                                              request.getOrderDate(),
                                                                                                               orderLocation,
                                                                                                               systemItemsIncludedInOrder)));
 
@@ -130,13 +128,13 @@ public class SDMService {
     }
 
     private PlaceDynamicOrderResponse createPlaceDynamicOrderResponse (DynamicOrder dynamicOrder) {
-        List<DynamicOrderEntityDTO> collect = dynamicOrder.getStaticOrders()
+        List<DynamicOrderEntityDTO> dynamicOrderEntityDTOS = dynamicOrder.getStaticOrders()
                                                           .entrySet()
                                                           .stream()
                                                           .map(entry -> createDynamicOrderEntity(entry))
                                                           .collect(Collectors.toList());
 
-        return new PlaceDynamicOrderResponse(collect);
+        return new PlaceDynamicOrderResponse(dynamicOrder.getOrderId(), dynamicOrderEntityDTOS);
     }
 
     private DynamicOrderEntityDTO createDynamicOrderEntity (Map.Entry<StoreDetails, Order> entry) {
