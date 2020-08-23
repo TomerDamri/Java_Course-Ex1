@@ -48,10 +48,10 @@ public class GeneratedDataMapper {
                 Map<Integer, StoreItem> storeItems = store.getItemIdToStoreItem();
                 if (storeItems.containsKey(entry.getKey())) {
                     int priceInStore = storeItems.get(entry.getKey()).getPrice();
-                    storeSellsInCheapestPrice = calculateStoreSellsInMinPrice(store.getId(),
-                                                                              priceInStore,
-                                                                              minPrice,
-                                                                              storeSellsInCheapestPrice);
+                    if (minPrice == null || minPrice > priceInStore) {
+                        minPrice = priceInStore;
+                        storeSellsInCheapestPrice = store.getId();
+                    }
                     storesCount++;
                     sumPrices += priceInStore;
                 }
@@ -63,13 +63,6 @@ public class GeneratedDataMapper {
         }
 
         return systemItems;
-    }
-
-    private Integer calculateStoreSellsInMinPrice (int storeId, int priceInStore, Integer minPrice, Integer storeSellsInCheapestPrice) {
-        if (minPrice == null || minPrice > priceInStore) {
-            storeSellsInCheapestPrice = storeId;
-        }
-        return storeSellsInCheapestPrice;
     }
 
     private double calculateAvgPrice (int storesCount, double avgPrice, double sumPrices) {

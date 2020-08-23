@@ -47,7 +47,7 @@ public class Menu {
     }
 
     private void printMenuOptions () {
-        System.out.println("\n\nPlease choose one of the following options, or press 'q' to quit:\n1. Load system data from file\n2. Display stores\n3. Display items\n4. Place new order\n5. Display orders history\n6.Save orders history to file\n6.Load orders history from file\n");
+        System.out.println("\n\nPlease choose one of the following options, or press 'q' to quit:\n1. Load system data from file\n2. Display stores\n3. Display items\n4. Place new order\n5. Display orders history\n6.Save orders history to file\n7.Load orders history from file\n");
     }
 
     private int getUserChoice () {
