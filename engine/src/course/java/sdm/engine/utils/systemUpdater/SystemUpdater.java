@@ -1,16 +1,14 @@
-package course.java.sdm.engine.utils;
+package course.java.sdm.engine.utils.systemUpdater;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Map;
 import java.util.Set;
 
-import course.java.sdm.engine.mapper.GeneratedDataMapper;
 import course.java.sdm.engine.model.*;
 
 public class SystemUpdater {
 
     private static SystemUpdater singletonSystemUpdater = null;
+    private final static SystemUpdaterValidator SYSTEM_UPDATER_VALIDATOR = new SystemUpdaterValidator();
 
     private SystemUpdater () {
     }
@@ -23,8 +21,26 @@ public class SystemUpdater {
         return singletonSystemUpdater;
     }
 
-    public void updateSystem (SystemStore systemStore, Order newOrder, Descriptor descriptor) {
-        completeTheOrder(systemStore, newOrder);
+    public void updateSystemAfterDynamicOrder (int dynamicOrderId, boolean toConfirmNewDynamicOrder, Descriptor descriptor) {
+        Map<Integer, DynamicOrder> dynamicOrders = descriptor.getDynamicOrders();
+        SYSTEM_UPDATER_VALIDATOR.validateDynamicOrderExist(dynamicOrderId, dynamicOrders);
+
+        DynamicOrder dynamicOrder = dynamicOrders.get(dynamicOrderId);
+        SYSTEM_UPDATER_VALIDATOR.validateDynamicOrderNotConfirmedYet(dynamicOrderId, dynamicOrder);
+
+        if (toConfirmNewDynamicOrder) {
+            dynamicOrder.setConfirmed(toConfirmNewDynamicOrder);
+            dynamicOrder.getStaticOrders().forEach( (key, value) -> {
+                SystemStore systemStore = descriptor.getSystemStores().get(key.getId());
+                updateSystemAfterStaticOrder(systemStore, value, descriptor);
+            });
+        }
+        else {
+            dynamicOrders.remove(dynamicOrderId);
+        }
+    }
+
+    public void updateSystemAfterStaticOrder (SystemStore systemStore, Order newOrder, Descriptor descriptor) {
         updateSystemStore(systemStore, newOrder);
         // add order to store
         systemStore.getOrders().add(newOrder);
@@ -41,72 +57,8 @@ public class SystemUpdater {
         updateDeliveriesPayment(systemStore, newOrder);
     }
 
-    private void completeTheOrder (SystemStore systemStore, Order newOrder) {
-        setItemTypes(newOrder);
-        setItemsAmount(newOrder);
-        setItemsPrice(newOrder);
-        setDeliveryPrice(systemStore, newOrder);
-        setTotalPrice(newOrder);
-    }
-
     private void updateDeliveriesPayment (SystemStore systemStore, Order newOrder) {
         systemStore.setTotalDeliveriesPayment(systemStore.getTotalDeliveriesPayment() + newOrder.getDeliveryPrice());
-    }
-
-    private void setItemTypes (Order newOrder) {
-        newOrder.setNumOfItemTypes(newOrder.getPricedItems().size());
-    }
-
-    private void setItemsAmount (Order newOrder) {
-        int amountOfItems = 0;
-        for (PricedItem pricedItem : newOrder.getPricedItems().keySet()) {
-            amountOfItems += calculateNumOfItemsToAdd(newOrder, pricedItem);
-        }
-
-        newOrder.setAmountOfItems(amountOfItems);
-    }
-
-    private int calculateNumOfItemsToAdd (Order newOrder, PricedItem pricedItem) {
-        int numOfItemsToAdd;
-        if (pricedItem.getPurchaseCategory().equals(Item.PurchaseCategory.WEIGHT)) {
-            numOfItemsToAdd = 1;
-        }
-        else {
-            numOfItemsToAdd = newOrder.getPricedItems().get(pricedItem).intValue();
-        }
-        return numOfItemsToAdd;
-    }
-
-    private void setItemsPrice (Order newOrder) {
-        double allItemPrices = 0;
-        for (PricedItem pricedItem : newOrder.getPricedItems().keySet()) {
-            allItemPrices += calculateTotalPriceForItem(newOrder, pricedItem);
-        }
-
-        BigDecimal bd = new BigDecimal(allItemPrices).setScale(2, RoundingMode.HALF_UP);
-        newOrder.setItemsPrice(bd.doubleValue());
-    }
-
-    private double calculateTotalPriceForItem (Order newOrder, PricedItem pricedItem) {
-        return pricedItem.getPrice() * newOrder.getPricedItems().get(pricedItem);
-    }
-
-    private void setDeliveryPrice (SystemStore systemStore, Order newOrder) {
-        Location orderLocation = newOrder.getOrderLocation();
-        Location storeLocation = systemStore.getLocation();
-        double deliveryPrice = calculateDeliveryDistance(orderLocation.getX() - storeLocation.getX(),
-                                                         orderLocation.getY() - storeLocation.getY())
-                    * systemStore.getDeliveryPpk();
-        deliveryPrice = GeneratedDataMapper.round(deliveryPrice, 2);
-        newOrder.setDeliveryPrice(deliveryPrice);
-    }
-
-    private double calculateDeliveryDistance (int x, int y) {
-        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-    }
-
-    private void setTotalPrice (Order newOrder) {
-        newOrder.setTotalPrice(newOrder.getItemsPrice() + newOrder.getDeliveryPrice());
     }
 
     private void updateStoreAfterOrderCompletion (SystemStore systemStore, Order newOrder) {

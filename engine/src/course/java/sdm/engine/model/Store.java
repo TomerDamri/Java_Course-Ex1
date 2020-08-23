@@ -4,43 +4,24 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class Store {
-
-    private int id;
-    private String name;
-    private int deliveryPpk;
-    private Location location;
+    private StoreDetails storeDetails;
     private Map<Integer, StoreItem> itemIdToStoreItem;
 
     public Store (String name, int deliveryPpk, Location location, Map<Integer, StoreItem> itemIdToStoreItem, int id) {
-        this.id = id;
-        this.name = name;
-        this.deliveryPpk = deliveryPpk;
-        this.location = location;
+        this.storeDetails = new StoreDetails(id, name, deliveryPpk, location);
         this.itemIdToStoreItem = itemIdToStoreItem;
     }
 
     public String getName () {
-        return name;
-    }
-
-    public void setName (String name) {
-        this.name = name;
+        return storeDetails.getName();
     }
 
     public int getDeliveryPpk () {
-        return deliveryPpk;
-    }
-
-    public void setDeliveryPpk (int deliveryPpk) {
-        this.deliveryPpk = deliveryPpk;
+        return storeDetails.getDeliveryPpk();
     }
 
     public Location getLocation () {
-        return location;
-    }
-
-    public void setLocation (Location location) {
-        this.location = location;
+        return storeDetails.getLocation();
     }
 
     public Map<Integer, StoreItem> getItemIdToStoreItem () {
@@ -48,20 +29,20 @@ public class Store {
     }
 
     public int getId () {
-        return id;
+        return storeDetails.getId();
     }
 
-    public void setId (int id) {
-        this.id = id;
+    public final StoreDetails getStoreDetails () {
+        return storeDetails;
     }
 
     @Override
     public String toString () {
-        StringBuilder builder = new StringBuilder("Store id: ").append(id)
+        StringBuilder builder = new StringBuilder("Store id: ").append(getId())
                                                                .append(",\nName: ")
-                                                               .append(name)
+                                                               .append(getName())
                                                                .append(",\nPPK: ")
-                                                               .append(deliveryPpk)
+                                                               .append(getDeliveryPpk())
                                                                .append(",\nStore Items:\n");
         if (!itemIdToStoreItem.isEmpty()) {
             builder.append("[");

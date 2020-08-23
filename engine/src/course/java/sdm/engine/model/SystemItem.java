@@ -1,13 +1,12 @@
 package course.java.sdm.engine.model;
 
-import course.java.sdm.engine.model.Item;
-
 public class SystemItem {
 
     private Item item;
     private int storesCount;
     private double avgPrice;
     private int ordersCount;
+    private int storeSellsInCheapestPrice;
 
     public SystemItem (Item item) {
         this.item = item;
@@ -54,6 +53,14 @@ public class SystemItem {
 
     public void setOrdersCount (int ordersCount) {
         this.ordersCount = ordersCount;
+    }
+
+    public Integer getStoreSellsInCheapestPrice () {
+        return storeSellsInCheapestPrice;
+    }
+
+    public void setStoreSellsInCheapestPrice (int storeSellsInCheapestPrice) {
+        this.storeSellsInCheapestPrice = storeSellsInCheapestPrice;
     }
 
     @Override

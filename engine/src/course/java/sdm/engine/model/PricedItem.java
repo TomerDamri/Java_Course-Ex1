@@ -1,12 +1,10 @@
 package course.java.sdm.engine.model;
 
-import course.java.sdm.engine.model.Item;
-
 public class PricedItem {
     private final Item item;
     private int price;
 
-    public Item getItem() {
+    public Item getItem () {
         return item;
     }
 

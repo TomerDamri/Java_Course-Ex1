@@ -1,4 +1,4 @@
-package course.java.sdm.engine.utils;
+package course.java.sdm.engine.utils.fileManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,7 +12,7 @@ import course.java.sdm.engine.exceptions.ItemNotFoundException;
 import course.java.sdm.engine.model.Item;
 import course.java.sdm.engine.model.Store;
 
-public class Validator {
+public class FileManagerValidator {
     private static final String XML_EXTENSION = ".xml";
 
     public void validateFile (String filePath) throws FileNotFoundException {
@@ -59,8 +59,8 @@ public class Validator {
     }
 
     private void validateFileExtension (String dataPath) {
-        if (!dataPath.endsWith(Validator.XML_EXTENSION)) {
-            throw new IllegalFileExtensionException(dataPath, Validator.XML_EXTENSION);
+        if (!dataPath.endsWith(FileManagerValidator.XML_EXTENSION)) {
+            throw new IllegalFileExtensionException(dataPath, FileManagerValidator.XML_EXTENSION);
         }
     }
 }

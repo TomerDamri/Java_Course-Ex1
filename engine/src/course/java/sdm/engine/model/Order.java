@@ -14,6 +14,7 @@ public class Order {
     private Integer amountOfItems;
     private Double itemsPrice;
     private Double deliveryPrice;
+    private Double distanceFromCustomerLocation;
     private Double totalPrice;
 
     public Order (Integer orderId, LocalDateTime orderDate, Location orderLocation) {
@@ -39,11 +40,11 @@ public class Order {
         this.deliveryPrice = deliveryPrice;
     }
 
-    public Double getItemsPrice() {
+    public Double getItemsPrice () {
         return itemsPrice;
     }
 
-    public void setItemsPrice(Double itemsPrice) {
+    public void setItemsPrice (Double itemsPrice) {
         this.itemsPrice = itemsPrice;
     }
 
@@ -51,7 +52,7 @@ public class Order {
         return id;
     }
 
-    public LocalDateTime getOrderDate() {
+    public LocalDateTime getOrderDate () {
         return orderDate;
     }
 
@@ -59,8 +60,16 @@ public class Order {
         return orderLocation;
     }
 
-    public Map<PricedItem, Double> getPricedItems() {
+    public Map<PricedItem, Double> getPricedItems () {
         return pricedItems;
+    }
+
+    public Double getDistanceFromCustomerLocation () {
+        return distanceFromCustomerLocation;
+    }
+
+    public void setDistanceFromCustomerLocation (Double distanceFromCustomerLocation) {
+        this.distanceFromCustomerLocation = distanceFromCustomerLocation;
     }
 
     public Integer getNumOfItemTypes () {

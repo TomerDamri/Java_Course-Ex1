@@ -32,40 +32,60 @@ public class GeneratedDataMapper {
                                                                     Store::getId,
                                                                     SystemStore::new,
                                                                     Store.class.getSimpleName());
-        Map<Integer, SystemItem> systemItemS = toSystemItems(items, systemStores.values());
+        Map<Integer, SystemItem> systemItems = toSystemItems(items, systemStores.values());
 
-        return new Descriptor(systemStores, systemItemS);
+        return new Descriptor(systemStores, systemItems);
     }
 
     private Map<Integer, SystemItem> toSystemItems (Map<Integer, Item> items, Collection<SystemStore> stores) {
-        Map<Integer, StoreItem> storeItems;
-        SystemItem systemItem;
-        int storesCount;
-        double avgPrice, sumPrices;
         Map<Integer, SystemItem> systemItems = new HashMap<>();
 
         for (Map.Entry<Integer, Item> entry : items.entrySet()) {
-            storesCount = 0;
-            avgPrice = 0;
-            sumPrices = 0;
+            Integer minPrice = null, storeSellsInCheapestPrice = null, storesCount = 0;
+            double avgPrice = 0, sumPrices = 0;
+
             for (SystemStore store : stores) {
-                storeItems = store.getItemIdToStoreItem();
+                Map<Integer, StoreItem> storeItems = store.getItemIdToStoreItem();
                 if (storeItems.containsKey(entry.getKey())) {
+                    int priceInStore = storeItems.get(entry.getKey()).getPrice();
+                    storeSellsInCheapestPrice = calculateStoreSellsInMinPrice(store.getId(),
+                                                                              priceInStore,
+                                                                              minPrice,
+                                                                              storeSellsInCheapestPrice);
                     storesCount++;
-                    sumPrices += storeItems.get(entry.getKey()).getPrice();
+                    sumPrices += priceInStore;
                 }
             }
-            if (storesCount > 0) {
-                avgPrice = round(sumPrices / storesCount, 2);
 
-            }
-            systemItem = new SystemItem(entry.getValue());
-            systemItem.setAvgPrice(avgPrice);
-            systemItem.setStoresCount(storesCount);
+            avgPrice = calculateAvgPrice(storesCount, avgPrice, sumPrices);
+            SystemItem systemItem = toSystemItem(storesCount, avgPrice, entry, storeSellsInCheapestPrice);
             systemItems.put(entry.getKey(), systemItem);
         }
 
         return systemItems;
+    }
+
+    private Integer calculateStoreSellsInMinPrice (int storeId, int priceInStore, Integer minPrice, Integer storeSellsInCheapestPrice) {
+        if (minPrice == null || minPrice > priceInStore) {
+            storeSellsInCheapestPrice = storeId;
+        }
+        return storeSellsInCheapestPrice;
+    }
+
+    private double calculateAvgPrice (int storesCount, double avgPrice, double sumPrices) {
+        if (storesCount > 0) {
+            avgPrice = round(sumPrices / storesCount, 2);
+        }
+        return avgPrice;
+    }
+
+    private SystemItem toSystemItem (int storesCount, double avgPrice, Map.Entry<Integer, Item> entry, int storeSellsInCheapestPrice) {
+        SystemItem systemItem;
+        systemItem = new SystemItem(entry.getValue());
+        systemItem.setAvgPrice(avgPrice);
+        systemItem.setStoresCount(storesCount);
+        systemItem.setStoreSellsInCheapestPrice(storeSellsInCheapestPrice);
+        return systemItem;
     }
 
     private Map<Integer, Store> toStores (SDMStores sdmStores, Map<Integer, Item> items) {

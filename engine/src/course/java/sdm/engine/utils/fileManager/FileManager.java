@@ -1,4 +1,4 @@
-package course.java.sdm.engine.utils;
+package course.java.sdm.engine.utils.fileManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,7 +20,7 @@ public class FileManager {
 
     private final static String JAXB_XML_PACKAGE_NAME = "examples.jaxb.schema.generated";
     private final static GeneratedDataMapper GENERATED_DATA_MAPPER = new GeneratedDataMapper();
-    private final static Validator validator = new Validator();
+    private final static FileManagerValidator FILE_MANAGER_VALIDATOR = new FileManagerValidator();
 
     private static FileManager singletonFileManager = null;
 
@@ -36,7 +36,7 @@ public class FileManager {
     }
 
     public SuperDuperMarketDescriptor generateDataFromXmlFile (String xml_file_path) throws FileNotFoundException {
-        validator.validateFile(xml_file_path);
+        FILE_MANAGER_VALIDATOR.validateFile(xml_file_path);
         InputStream inputStream = new FileInputStream(new File(xml_file_path));
         SuperDuperMarketDescriptor superDuperMarketDescriptor = null;
         try {
@@ -51,7 +51,7 @@ public class FileManager {
     public Descriptor loadDataFromGeneratedData (SuperDuperMarketDescriptor superDuperMarketDescriptor) {
         Map<Integer, Item> items = GENERATED_DATA_MAPPER.generatedItemsToItems(superDuperMarketDescriptor.getSDMItems());
         Map<Integer, Store> stores = GENERATED_DATA_MAPPER.generatedStoresToStores(superDuperMarketDescriptor.getSDMStores(), items);
-        validator.validateItemsAndStores(items, stores);
+        FILE_MANAGER_VALIDATOR.validateItemsAndStores(items, stores);
 
         return GENERATED_DATA_MAPPER.toDescriptor(items, stores);
     }

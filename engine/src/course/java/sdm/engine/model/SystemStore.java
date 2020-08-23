@@ -24,6 +24,10 @@ public class SystemStore {
         this.orders = new ArrayList<>();
     }
 
+    public Store getStore () {
+        return store;
+    }
+
     public int getId () {
         return store.getId();
     }

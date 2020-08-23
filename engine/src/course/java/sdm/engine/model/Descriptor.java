@@ -1,48 +1,49 @@
 package course.java.sdm.engine.model;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Descriptor {
 
     private static Integer numOfOrders = 1;
+    private static Integer numOfDynamicOrders = 1;
     private Map<Integer, SystemStore> systemStores;
     private Map<Integer, SystemItem> systemItems;
     private Map<Integer, SystemOrder> systemOrders;
+    private Map<Integer, DynamicOrder> dynamicOrders;
 
-    public static Integer generateOrderId(){
+    public static Integer generateStaticOrderId () {
         Integer num = numOfOrders;
-        numOfOrders ++;
+        numOfOrders++;
         return num;
     }
 
-    public Descriptor(Map<Integer, SystemStore> systemStores, Map<Integer, SystemItem> systemItems) {
-        this.systemStores = systemStores;
-        this.systemItems = systemItems;
-        this.systemOrders = new HashMap<>();
+    public static Integer generateDynamicOrderId () {
+        Integer num = numOfDynamicOrders;
+        numOfDynamicOrders++;
+        return num;
     }
 
-    public Map<Integer, SystemStore> getSystemStores() {
+    public Descriptor (Map<Integer, SystemStore> systemStores, Map<Integer, SystemItem> systemItems) {
+        this.systemStores = systemStores;
+        this.systemItems = systemItems;
+        this.systemOrders = new TreeMap<>();
+        this.dynamicOrders = new TreeMap<>();
+    }
+
+    public Map<Integer, SystemStore> getSystemStores () {
         return systemStores;
     }
 
-    public void setSystemStores(Map<Integer, SystemStore> systemStores) {
-        this.systemStores = systemStores;
-    }
-
-    public Map<Integer, SystemItem> getSystemItems() {
+    public Map<Integer, SystemItem> getSystemItems () {
         return systemItems;
     }
 
-    public void setSystemItems(Map<Integer, SystemItem> systemItems) {
-        this.systemItems = systemItems;
-    }
-
-    public Map<Integer, SystemOrder> getSystemOrders() {
+    public Map<Integer, SystemOrder> getSystemOrders () {
         return systemOrders;
     }
 
-    public void setSystemOrders(Map<Integer, SystemOrder> systemOrders) {
-        this.systemOrders = systemOrders;
+    public Map<Integer, DynamicOrder> getDynamicOrders () {
+        return dynamicOrders;
     }
 }
