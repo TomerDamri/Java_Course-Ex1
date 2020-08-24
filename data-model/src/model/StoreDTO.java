@@ -3,6 +3,7 @@ package model;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class StoreDTO {
     private final int id;
@@ -11,7 +12,7 @@ public class StoreDTO {
     private final int xCoordinate;
     private final int yCoordinate;
     private final Map<Integer, StoreItemDTO> items;
-    private final List<Integer> orders;
+    private final List<UUID> orders;
     private final double totalDeliveriesPayment;
 
     public StoreDTO (int id,
@@ -20,7 +21,7 @@ public class StoreDTO {
                      int xCoordinate,
                      int yCoordinate,
                      Map<Integer, StoreItemDTO> items,
-                     List<Integer> orders,
+                     List<UUID> orders,
                      double totalDeliveriesPayment) {
         this.id = id;
         this.name = name;
@@ -56,7 +57,7 @@ public class StoreDTO {
         return items;
     }
 
-    public List<Integer> getOrders () {
+    public List<UUID> getOrders () {
         return orders;
     }
 

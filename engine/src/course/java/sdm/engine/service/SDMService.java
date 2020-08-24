@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -97,13 +98,13 @@ public class SDMService {
                                                                                                               orderLocation,
                                                                                                               systemItemsIncludedInOrder)));
 
-        DynamicOrder dynamicOrder = new DynamicOrder(Descriptor.generateDynamicOrderId(), staticOrders);
+        DynamicOrder dynamicOrder = new DynamicOrder(staticOrders);
         descriptor.getDynamicOrders().put(dynamicOrder.getOrderId(), dynamicOrder);
 
         return createPlaceDynamicOrderResponse(dynamicOrder);
     }
 
-    public void completeDynamicOrder (int dynamicOrderId, boolean toConfirmNewDynamicOrder) {
+    public void completeDynamicOrder (UUID dynamicOrderId, boolean toConfirmNewDynamicOrder) {
         systemUpdater.updateSystemAfterDynamicOrder(dynamicOrderId, toConfirmNewDynamicOrder, descriptor);
     }
 
@@ -113,8 +114,8 @@ public class SDMService {
 
     public void loadDataFromFile (String path) {
         SystemOrdersHistory systemOrdersHistory = fileManager.loadDataFromFile(path);
-        Map<Integer, SystemOrder> historySystemOrders = systemOrdersHistory.getSystemOrders();
-        Map<Integer, DynamicOrder> historyDynamicOrders = systemOrdersHistory.getDynamicOrders();
+        Map<UUID, SystemOrder> historySystemOrders = systemOrdersHistory.getSystemOrders();
+        Map<UUID, DynamicOrder> historyDynamicOrders = systemOrdersHistory.getDynamicOrders();
 
         systemUpdater.updateSystemAfterLoadingOrdersHistoryFromFile(historySystemOrders, historyDynamicOrders, descriptor);
     }

@@ -1,6 +1,7 @@
 package course.java.sdm.engine.mapper;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import course.java.sdm.engine.model.*;
@@ -27,11 +28,11 @@ public class DTOMapper {
         return new GetItemsResponse(items);
     }
 
-    public GetOrdersResponse toGetOrdersResponse (Map<Integer, SystemOrder> systemOrders) {
-        Map<Integer, OrderDTO> orders = systemOrders.values()
-                                                    .stream()
-                                                    .map(this::toOrderDTO)
-                                                    .collect(Collectors.toMap(OrderDTO::getId, systemItemDTO -> systemItemDTO));
+    public GetOrdersResponse toGetOrdersResponse (Map<UUID, SystemOrder> systemOrders) {
+        Map<UUID, OrderDTO> orders = systemOrders.values()
+                                                 .stream()
+                                                 .map(this::toOrderDTO)
+                                                 .collect(Collectors.toMap(OrderDTO::getId, systemItemDTO -> systemItemDTO));
         return new GetOrdersResponse(orders);
     }
 
@@ -59,19 +60,15 @@ public class DTOMapper {
     }
 
     private StoreItemDTO toStoreItemDTO (StoreItem storeItem) {
-        return new StoreItemDTO(toPricedItemDTO(storeItem.getPricedItem()),
-                                storeItem.getPurchasesCount());
+        return new StoreItemDTO(toPricedItemDTO(storeItem.getPricedItem()), storeItem.getPurchasesCount());
     }
 
     private PricedItemDTO toPricedItemDTO (PricedItem pricedItem) {
-        return new PricedItemDTO(toItemDTO(pricedItem.getItem()),
-                pricedItem.getPrice());
+        return new PricedItemDTO(toItemDTO(pricedItem.getItem()), pricedItem.getPrice());
     }
 
-    private ItemDTO toItemDTO(Item item){
-       return new ItemDTO( item.getId(),
-               item.getName(),
-               item.getPurchaseCategory().name());
+    private ItemDTO toItemDTO (Item item) {
+        return new ItemDTO(item.getId(), item.getName(), item.getPurchaseCategory().name());
 
     }
 

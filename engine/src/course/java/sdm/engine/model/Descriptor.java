@@ -3,6 +3,7 @@ package course.java.sdm.engine.model;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.UUID;
 
 public class Descriptor implements Serializable {
 
@@ -10,8 +11,8 @@ public class Descriptor implements Serializable {
     private static Integer numOfDynamicOrders = 1;
     private Map<Integer, SystemStore> systemStores;
     private Map<Integer, SystemItem> systemItems;
-    private Map<Integer, SystemOrder> systemOrders;
-    private Map<Integer, DynamicOrder> dynamicOrders;
+    private Map<UUID, SystemOrder> systemOrders;
+    private Map<UUID, DynamicOrder> dynamicOrders;
 
     public static Integer generateStaticOrderId () {
         Integer num = numOfOrders;
@@ -40,11 +41,11 @@ public class Descriptor implements Serializable {
         return systemItems;
     }
 
-    public Map<Integer, SystemOrder> getSystemOrders () {
+    public Map<UUID, SystemOrder> getSystemOrders () {
         return systemOrders;
     }
 
-    public Map<Integer, DynamicOrder> getDynamicOrders () {
+    public Map<UUID, DynamicOrder> getDynamicOrders () {
         return dynamicOrders;
     }
 }

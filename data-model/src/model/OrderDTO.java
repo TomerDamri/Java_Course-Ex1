@@ -2,9 +2,10 @@ package model;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.UUID;
 
 public class OrderDTO {
-    private Integer id;
+    private UUID id;
     private LocalDateTime orderDate;
     private int xCoordinate;
     private int yCoordinate;
@@ -17,7 +18,7 @@ public class OrderDTO {
     private String storeName;
     private Integer storeId;
 
-    public OrderDTO (Integer id,
+    public OrderDTO (UUID id,
                      LocalDateTime orderDate,
                      int xCoordinate,
                      int yCoordinate,
@@ -43,7 +44,7 @@ public class OrderDTO {
         this.storeId = storeId;
     }
 
-    public Integer getId () {
+    public UUID getId () {
         return id;
     }
 

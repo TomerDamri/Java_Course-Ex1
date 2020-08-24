@@ -29,7 +29,7 @@ public class OrdersCreator {
                               Location orderLocation,
                               Map<PricedItem, Double> pricedItemToAmountMap) {
         ORDERS_CREATOR_VALIDATOR.validateLocation(orderLocation, systemStore);
-        Order newOrder = new Order(Descriptor.generateStaticOrderId(), orderDate, orderLocation);
+        Order newOrder = new Order(orderDate, orderLocation);
         addItemsToOrder(systemStore, newOrder, pricedItemToAmountMap);
         completeTheOrder(systemStore, newOrder);
 
@@ -115,6 +115,6 @@ public class OrdersCreator {
     }
 
     private void setTotalPrice (Order newOrder) {
-        newOrder.setTotalPrice(newOrder.getItemsPrice() + newOrder.getDeliveryPrice());
+        newOrder.setTotalPrice(GeneratedDataMapper.round(newOrder.getItemsPrice() + newOrder.getDeliveryPrice(), 2));
     }
 }

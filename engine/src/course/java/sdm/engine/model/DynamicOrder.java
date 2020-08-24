@@ -2,20 +2,21 @@ package course.java.sdm.engine.model;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.UUID;
 
 public class DynamicOrder implements Serializable {
 
-    private int orderId;
+    private UUID orderId;
     private boolean isConfirmed;
     private Map<StoreDetails, Order> staticOrders;
 
-    public DynamicOrder (int orderId, Map<StoreDetails, Order> staticOrders) {
-        this.orderId = orderId;
+    public DynamicOrder (Map<StoreDetails, Order> staticOrders) {
+        this.orderId = UUID.randomUUID();
         this.staticOrders = staticOrders;
         this.isConfirmed = false;
     }
 
-    public int getOrderId () {
+    public UUID getOrderId () {
         return orderId;
     }
 

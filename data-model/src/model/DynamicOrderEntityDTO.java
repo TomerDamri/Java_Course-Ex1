@@ -10,7 +10,7 @@ public class DynamicOrderEntityDTO {
     private final Integer ppk;
     private final Integer totalItemTypes;
     private final Double deliveryPrice;
-    private final Double totalPrice;
+    private final Double totalItemsPrice;
 
     public DynamicOrderEntityDTO (Integer storeId,
                                   String storeName,
@@ -29,7 +29,7 @@ public class DynamicOrderEntityDTO {
         this.ppk = ppk;
         this.totalItemTypes = totalItemTypes;
         this.deliveryPrice = deliveryPrice;
-        this.totalPrice = totalPrice;
+        this.totalItemsPrice = totalPrice;
     }
 
     public final Integer getStoreId () {
@@ -48,7 +48,7 @@ public class DynamicOrderEntityDTO {
         return yCoordinate;
     }
 
-    public final Double getDistanceFromCustomer() {
+    public final Double getDistanceFromCustomer () {
         return distanceFromCustomer;
     }
 
@@ -60,12 +60,12 @@ public class DynamicOrderEntityDTO {
         return totalItemTypes;
     }
 
-    public final Double getDeliveryPrice() {
+    public final Double getDeliveryPrice () {
         return deliveryPrice;
     }
 
-    public final Double getTotalPrice () {
-        return totalPrice;
+    public final Double getTotalItemsPrice () {
+        return totalItemsPrice;
     }
 
     @Override
@@ -85,8 +85,10 @@ public class DynamicOrderEntityDTO {
                                               .append(totalItemTypes)
                                               .append(",\nDelivery price: ")
                                               .append(deliveryPrice)
-                                              .append(",\nTotal price: ")
-                                              .append(totalPrice)
+                                              .append(",\nItems price: ")
+                                              .append(totalItemsPrice)
+                                              .append(",\nOrder total price: ")
+                                              .append(totalItemsPrice + deliveryPrice)
                                               .toString();
 
     }

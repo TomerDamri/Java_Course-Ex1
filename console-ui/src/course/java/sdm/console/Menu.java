@@ -47,7 +47,7 @@ public class Menu {
     }
 
     private void printMenuOptions () {
-        System.out.println("\n\nPlease choose one of the following options, or press 'q' to quit:\n1. Load system data from file\n2. Display stores\n3. Display items\n4. Place new order\n5. Display orders history\n6.Save orders history to file\n7.Load orders history from file\n");
+        System.out.println("\n\nPlease choose one of the following options, or press 'q' to quit:\n1. Load system data from file\n2. Display stores\n3. Display items\n4. Place new order\n5. Display orders history\n6. Save orders history to file\n7. Load orders history from file\n");
     }
 
     private int getUserChoice () {
@@ -120,7 +120,7 @@ public class Menu {
         String userInput = scanner.nextLine();
         try {
             controller.loadOrdersHistoryFromFile(userInput);
-            System.out.println("System data saved to file successfully");
+            System.out.println("System data loaded from file successfully");
         }
         catch (Exception e) {
             System.out.println("Failed saving to file.\n" + e.getMessage());
@@ -159,7 +159,7 @@ public class Menu {
                 Iterator<StoreDTO> iterator = this.stores.values().iterator();
                 while (iterator.hasNext()) {
                     StoreDTO store = iterator.next();
-                    System.out.print("{" + store + "}");
+                    System.out.print("\n{" + store + "}");
                     if (iterator.hasNext()) {
                         System.out.println(",");
                     }
@@ -182,7 +182,7 @@ public class Menu {
                 Iterator<SystemItemDTO> iterator = this.items.values().iterator();
                 while (iterator.hasNext()) {
                     SystemItemDTO item = iterator.next();
-                    System.out.print("{" + item + "}");
+                    System.out.print("\n{" + item + "}");
                     if (iterator.hasNext()) {
                         System.out.println(",");
                     }
@@ -204,7 +204,7 @@ public class Menu {
                 Iterator<OrderDTO> iterator = response.getOrders().values().iterator();
                 while (iterator.hasNext()) {
                     OrderDTO order = iterator.next();
-                    System.out.print("{" + order + "}");
+                    System.out.print("\n{" + order + "}");
                     if (iterator.hasNext()) {
                         System.out.println(",");
                     }
@@ -588,34 +588,38 @@ public class Menu {
     private void printOrderSummary (PlaceOrderRequest request) {
         System.out.println("Order summary:\nOrder items:");
         Iterator<Integer> iterator = request.getOrderItemToAmount().keySet().iterator();
+        double totalItemsPrice = 0;
         while (iterator.hasNext()) {
             Integer itemId = iterator.next();
             SystemItemDTO item = items.get(itemId);
             double amount = request.getOrderItemToAmount().get(itemId);
             int itemPrice = stores.get(request.getStoreId()).getItems().get(itemId).getPrice();
-
+            double totalItemPrice = round(amount * itemPrice, 2);
             System.out.print(String.format("{Item id: %s,\nItem name: %s,\nPurchase category: %s,\nPrice: %s,\nAmount: %s,\nTotal item price: %s}",
                                            itemId,
                                            item.getName(),
                                            item.getPurchaseCategory(),
                                            itemPrice,
                                            amount,
-                                           round(amount * itemPrice, 2)));
+                                           itemPrice));
             if (iterator.hasNext()) {
                 System.out.println(",");
             }
+            totalItemsPrice += totalItemPrice;
         }
         System.out.println();
         double distance = calculateDistance((this.stores.get(request.getStoreId()).get_X_Coordinate()),
                                             request.getxCoordinate(),
                                             this.stores.get(request.getStoreId()).get_Y_Coordinate(),
                                             request.getyCoordinate());
+
         int ppk = this.stores.get(request.getStoreId()).getDeliveryPpk();
-        System.out.println(String.format("Distance form store: %s\nStore PPK: %s\nDelivery price: %s",
+        double deliveryPrice = round(distance * ppk, 2);
+        System.out.println(String.format("Distance form store: %s\nStore PPK: %s\nDelivery price: %s,\nOrder total price: %s ",
                                          distance,
                                          ppk,
-                                         round(distance * ppk, 2)));
-
+                                         deliveryPrice,
+                                         deliveryPrice + totalItemsPrice));
     }
 
     private double calculateDistance (int x1, int x2, int y1, int y2) {

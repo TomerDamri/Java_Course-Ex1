@@ -3,6 +3,7 @@ package course.java.sdm.engine.model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.UUID;
 
 public class SystemOrder implements Serializable {
 
@@ -16,11 +17,11 @@ public class SystemOrder implements Serializable {
         this.storeId = storeId;
     }
 
-    public Order getOrder() {
+    public Order getOrder () {
         return order;
     }
 
-    public Integer getId () {
+    public UUID getId () {
         return order.getId();
     }
 

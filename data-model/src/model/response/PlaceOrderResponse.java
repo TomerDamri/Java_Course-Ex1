@@ -1,13 +1,15 @@
 package model.response;
 
-public class PlaceOrderResponse {
-    private final Integer orderId;
+import java.util.UUID;
 
-    public PlaceOrderResponse(Integer orderId) {
+public class PlaceOrderResponse {
+    private final UUID orderId;
+
+    public PlaceOrderResponse (UUID orderId) {
         this.orderId = orderId;
     }
 
-    public Integer getOrderId() {
+    public UUID getOrderId () {
         return orderId;
     }
 }

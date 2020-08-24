@@ -1,8 +1,7 @@
 package course.java.sdm.engine.controller.impl;
 
 import java.io.FileNotFoundException;
-import java.time.LocalDateTime;
-import java.util.Map;
+import java.util.UUID;
 
 import course.java.sdm.engine.controller.ISDMController;
 import course.java.sdm.engine.service.SDMService;
@@ -54,7 +53,7 @@ public class SDMControllerImpl implements ISDMController {
     }
 
     @Override
-    public void completeDynamicOrder (int dynamicOrderId, boolean toConfirmNewDynamicOrder) {
+    public void completeDynamicOrder (UUID dynamicOrderId, boolean toConfirmNewDynamicOrder) {
         service.completeDynamicOrder(dynamicOrderId, toConfirmNewDynamicOrder);
     }
 

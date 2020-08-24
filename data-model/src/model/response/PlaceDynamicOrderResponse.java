@@ -1,20 +1,21 @@
 package model.response;
 
 import java.util.List;
+import java.util.UUID;
 
 import model.DynamicOrderEntityDTO;
 
 public class PlaceDynamicOrderResponse {
 
-    private int id;
+    private UUID id;
     private final List<DynamicOrderEntityDTO> dynamicOrderEntityDTO;
 
-    public PlaceDynamicOrderResponse(int id, List<DynamicOrderEntityDTO> dynamicOrderEntityDTO) {
+    public PlaceDynamicOrderResponse (UUID id, List<DynamicOrderEntityDTO> dynamicOrderEntityDTO) {
         this.id = id;
         this.dynamicOrderEntityDTO = dynamicOrderEntityDTO;
     }
 
-    public int getId() {
+    public UUID getId () {
         return id;
     }
 

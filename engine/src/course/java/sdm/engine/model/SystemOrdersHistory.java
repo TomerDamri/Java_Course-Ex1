@@ -2,25 +2,26 @@ package course.java.sdm.engine.model;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.UUID;
 
 public class SystemOrdersHistory implements Serializable {
 
-    private Map<Integer, SystemOrder> systemOrders;
-    private Map<Integer, DynamicOrder> dynamicOrders;
+    private Map<UUID, SystemOrder> systemOrders;
+    private Map<UUID, DynamicOrder> dynamicOrders;
 
     public SystemOrdersHistory () {
     }
 
-    public SystemOrdersHistory (Map<Integer, SystemOrder> systemOrders, Map<Integer, DynamicOrder> dynamicOrders) {
+    public SystemOrdersHistory (Map<UUID, SystemOrder> systemOrders, Map<UUID, DynamicOrder> dynamicOrders) {
         this.systemOrders = systemOrders;
         this.dynamicOrders = dynamicOrders;
     }
 
-    public Map<Integer, DynamicOrder> getDynamicOrders () {
+    public Map<UUID, DynamicOrder> getDynamicOrders () {
         return dynamicOrders;
     }
 
-    public Map<Integer, SystemOrder> getSystemOrders () {
+    public Map<UUID, SystemOrder> getSystemOrders () {
         return systemOrders;
     }
 }

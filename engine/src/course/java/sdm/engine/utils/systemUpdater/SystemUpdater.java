@@ -2,7 +2,9 @@ package course.java.sdm.engine.utils.systemUpdater;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
+import course.java.sdm.engine.mapper.GeneratedDataMapper;
 import course.java.sdm.engine.model.*;
 
 public class SystemUpdater {
@@ -21,20 +23,20 @@ public class SystemUpdater {
         return singletonSystemUpdater;
     }
 
-    public void updateSystemAfterLoadingOrdersHistoryFromFile (Map<Integer, SystemOrder> ordersFromHistoryFile,
-                                                               Map<Integer, DynamicOrder> historyDynamicOrders,
+    public void updateSystemAfterLoadingOrdersHistoryFromFile (Map<UUID, SystemOrder> ordersFromHistoryFile,
+                                                               Map<UUID, DynamicOrder> historyDynamicOrders,
                                                                Descriptor descriptor) {
-        Map<Integer, SystemOrder> systemOrdersBeforeUpdate = descriptor.getSystemOrders();
-        Map<Integer, DynamicOrder> dynamicOrdersBeforeUpdate = descriptor.getDynamicOrders();
+        Map<UUID, SystemOrder> systemOrdersBeforeUpdate = descriptor.getSystemOrders();
+        Map<UUID, DynamicOrder> dynamicOrdersBeforeUpdate = descriptor.getDynamicOrders();
         Map<Integer, SystemStore> systemStores = descriptor.getSystemStores();
 
         updateSystemOrdersAccordingToHistoryFile(ordersFromHistoryFile, descriptor, systemOrdersBeforeUpdate, systemStores);
         updateDynamicOrdersAccordingToHistoryFile(historyDynamicOrders, dynamicOrdersBeforeUpdate);
     }
 
-    private void updateSystemOrdersAccordingToHistoryFile (Map<Integer, SystemOrder> ordersFromHistoryFile,
+    private void updateSystemOrdersAccordingToHistoryFile (Map<UUID, SystemOrder> ordersFromHistoryFile,
                                                            Descriptor descriptor,
-                                                           Map<Integer, SystemOrder> systemOrdersBeforeUpdate,
+                                                           Map<UUID, SystemOrder> systemOrdersBeforeUpdate,
                                                            Map<Integer, SystemStore> systemStores) {
         ordersFromHistoryFile.entrySet()
                              .stream()
@@ -48,16 +50,16 @@ public class SystemUpdater {
                              });
     }
 
-    private void updateDynamicOrdersAccordingToHistoryFile (Map<Integer, DynamicOrder> historyDynamicOrders,
-                                                            Map<Integer, DynamicOrder> dynamicOrdersBeforeUpdate) {
+    private void updateDynamicOrdersAccordingToHistoryFile (Map<UUID, DynamicOrder> historyDynamicOrders,
+                                                            Map<UUID, DynamicOrder> dynamicOrdersBeforeUpdate) {
         historyDynamicOrders.entrySet()
                             .stream()
                             .filter(entry -> !dynamicOrdersBeforeUpdate.containsKey(entry.getKey()))
                             .forEach(entry -> dynamicOrdersBeforeUpdate.put(entry.getKey(), entry.getValue()));
     }
 
-    public void updateSystemAfterDynamicOrder (int dynamicOrderId, boolean toConfirmNewDynamicOrder, Descriptor descriptor) {
-        Map<Integer, DynamicOrder> dynamicOrders = descriptor.getDynamicOrders();
+    public void updateSystemAfterDynamicOrder (UUID dynamicOrderId, boolean toConfirmNewDynamicOrder, Descriptor descriptor) {
+        Map<UUID, DynamicOrder> dynamicOrders = descriptor.getDynamicOrders();
         SYSTEM_UPDATER_VALIDATOR.validateDynamicOrderExist(dynamicOrderId, dynamicOrders);
 
         DynamicOrder dynamicOrder = dynamicOrders.get(dynamicOrderId);
@@ -94,7 +96,8 @@ public class SystemUpdater {
     }
 
     private void updateDeliveriesPayment (SystemStore systemStore, Order newOrder) {
-        systemStore.setTotalDeliveriesPayment(systemStore.getTotalDeliveriesPayment() + newOrder.getDeliveryPrice());
+        systemStore.setTotalDeliveriesPayment(GeneratedDataMapper.round(systemStore.getTotalDeliveriesPayment()
+                    + newOrder.getDeliveryPrice(), 2));
     }
 
     private void updateStoreAfterOrderCompletion (SystemStore systemStore, Order newOrder) {

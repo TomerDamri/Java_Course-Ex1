@@ -1,6 +1,7 @@
 package course.java.sdm.engine.controller;
 
 import java.io.FileNotFoundException;
+import java.util.UUID;
 
 import model.request.PlaceDynamicOrderRequest;
 import model.request.PlaceOrderRequest;
@@ -23,9 +24,9 @@ public interface ISDMController {
 
     PlaceDynamicOrderResponse placeDynamicOrder (PlaceDynamicOrderRequest request);
 
-    void completeDynamicOrder (int dynamicOrderId, boolean toConfirmNewDynamicOrder);
+    void completeDynamicOrder (UUID dynamicOrderId, boolean toConfirmNewDynamicOrder);
 
-    void saveOrdersHistoryToFile(String path);
+    void saveOrdersHistoryToFile (String path);
 
-    void loadOrdersHistoryFromFile(String path);
+    void loadOrdersHistoryFromFile (String path);
 }

@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class Order implements Serializable {
 
-    private final Integer id;
+    private final UUID id;
     private final LocalDateTime orderDate;
     private final Location orderLocation;
     private Map<PricedItem, Double> pricedItems;
@@ -19,8 +19,8 @@ public class Order implements Serializable {
     private Double distanceFromCustomerLocation;
     private Double totalPrice;
 
-    public Order (Integer orderId, LocalDateTime orderDate, Location orderLocation) {
-        this.id = orderId;
+    public Order (LocalDateTime orderDate, Location orderLocation) {
+        this.id = UUID.randomUUID();
         this.orderDate = orderDate;
         this.orderLocation = orderLocation;
         this.pricedItems = new HashMap<>();
@@ -50,7 +50,7 @@ public class Order implements Serializable {
         this.itemsPrice = itemsPrice;
     }
 
-    public Integer getId () {
+    public UUID getId () {
         return id;
     }
 
