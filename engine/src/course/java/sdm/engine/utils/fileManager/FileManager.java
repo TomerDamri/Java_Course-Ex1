@@ -13,6 +13,7 @@ import course.java.sdm.engine.mapper.GeneratedDataMapper;
 import course.java.sdm.engine.model.Descriptor;
 import course.java.sdm.engine.model.Item;
 import course.java.sdm.engine.model.Store;
+import course.java.sdm.engine.model.SystemOrdersHistory;
 import examples.jaxb.schema.generated.SuperDuperMarketDescriptor;
 
 public class FileManager {
@@ -55,15 +56,16 @@ public class FileManager {
         return GENERATED_DATA_MAPPER.toDescriptor(items, stores);
     }
 
-    public void saveSystemToFile (Descriptor descriptor, String path) {
+    public void saveOrdersHistoryToFile (Descriptor descriptor, String path) {
         if (descriptor == null) {
             throw new FileNotLoadedException();
         }
 
         try {
+            SystemOrdersHistory systemOrdersHistory = new SystemOrdersHistory(descriptor.getSystemOrders(), descriptor.getDynamicOrders());
             FileOutputStream fileOutputStream = new FileOutputStream(path);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(descriptor);
+            objectOutputStream.writeObject(systemOrdersHistory);
             objectOutputStream.flush();
             objectOutputStream.close();
         }
@@ -75,14 +77,14 @@ public class FileManager {
         }
     }
 
-    public Descriptor loadDataFromFile (String path) {
+    public SystemOrdersHistory loadDataFromFile (String path) {
         try {
             FileInputStream fileInputStream = new FileInputStream(path);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-            Descriptor descriptor = (Descriptor) objectInputStream.readObject();
+            SystemOrdersHistory systemOrdersHistory = (SystemOrdersHistory) objectInputStream.readObject();
             objectInputStream.close();
 
-            return descriptor;
+            return systemOrdersHistory;
         }
         catch (FileNotFoundException ex) {
             throw new FileNotLoadedException(String.format("Failed to load file : %s because the file not found", path));

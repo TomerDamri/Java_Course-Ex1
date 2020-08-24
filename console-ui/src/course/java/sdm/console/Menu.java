@@ -444,7 +444,7 @@ public class Menu {
             y = getCoordinate();
             validLocation = controller.isValidLocation(x, y);
             if (!validLocation) {
-                System.out.println("Invalid location. It is the location of the selected store.");
+                System.out.println("Invalid location.This location already populated by store.");
             }
         }
         while (!validLocation);

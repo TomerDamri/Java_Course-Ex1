@@ -59,12 +59,12 @@ public class SDMControllerImpl implements ISDMController {
     }
 
     @Override
-    public void saveOrdersHistoryToFile(String path) {
-        service.saveSystemToFile(path);
+    public void saveOrdersHistoryToFile (String path) {
+        service.saveOrdersHistoryToFile(path);
     }
 
     @Override
-    public void loadOrdersHistoryFromFile(String path) {
+    public void loadOrdersHistoryFromFile (String path) {
         service.loadDataFromFile(path);
     }
 }

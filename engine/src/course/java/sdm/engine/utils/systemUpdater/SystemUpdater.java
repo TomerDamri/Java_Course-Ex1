@@ -21,6 +21,41 @@ public class SystemUpdater {
         return singletonSystemUpdater;
     }
 
+    public void updateSystemAfterLoadingOrdersHistoryFromFile (Map<Integer, SystemOrder> ordersFromHistoryFile,
+                                                               Map<Integer, DynamicOrder> historyDynamicOrders,
+                                                               Descriptor descriptor) {
+        Map<Integer, SystemOrder> systemOrdersBeforeUpdate = descriptor.getSystemOrders();
+        Map<Integer, DynamicOrder> dynamicOrdersBeforeUpdate = descriptor.getDynamicOrders();
+        Map<Integer, SystemStore> systemStores = descriptor.getSystemStores();
+
+        updateSystemOrdersAccordingToHistoryFile(ordersFromHistoryFile, descriptor, systemOrdersBeforeUpdate, systemStores);
+        updateDynamicOrdersAccordingToHistoryFile(historyDynamicOrders, dynamicOrdersBeforeUpdate);
+    }
+
+    private void updateSystemOrdersAccordingToHistoryFile (Map<Integer, SystemOrder> ordersFromHistoryFile,
+                                                           Descriptor descriptor,
+                                                           Map<Integer, SystemOrder> systemOrdersBeforeUpdate,
+                                                           Map<Integer, SystemStore> systemStores) {
+        ordersFromHistoryFile.entrySet()
+                             .stream()
+                             .filter(entry -> !systemOrdersBeforeUpdate.containsKey(entry.getValue().getId()))
+                             .forEach(entry -> {
+                                 Integer storeId = entry.getValue().getStoreId();
+                                 Order order = entry.getValue().getOrder();
+                                 SystemStore systemStore = systemStores.get(storeId);
+
+                                 updateSystemAfterStaticOrder(systemStore, order, descriptor);
+                             });
+    }
+
+    private void updateDynamicOrdersAccordingToHistoryFile (Map<Integer, DynamicOrder> historyDynamicOrders,
+                                                            Map<Integer, DynamicOrder> dynamicOrdersBeforeUpdate) {
+        historyDynamicOrders.entrySet()
+                            .stream()
+                            .filter(entry -> !dynamicOrdersBeforeUpdate.containsKey(entry.getKey()))
+                            .forEach(entry -> dynamicOrdersBeforeUpdate.put(entry.getKey(), entry.getValue()));
+    }
+
     public void updateSystemAfterDynamicOrder (int dynamicOrderId, boolean toConfirmNewDynamicOrder, Descriptor descriptor) {
         Map<Integer, DynamicOrder> dynamicOrders = descriptor.getDynamicOrders();
         SYSTEM_UPDATER_VALIDATOR.validateDynamicOrderExist(dynamicOrderId, dynamicOrders);
@@ -31,7 +66,8 @@ public class SystemUpdater {
         if (toConfirmNewDynamicOrder) {
             dynamicOrder.setConfirmed(toConfirmNewDynamicOrder);
             dynamicOrder.getStaticOrders().forEach( (key, value) -> {
-                SystemStore systemStore = descriptor.getSystemStores().get(key.getId());
+                int storeId = key.getId();
+                SystemStore systemStore = descriptor.getSystemStores().get(storeId);
                 updateSystemAfterStaticOrder(systemStore, value, descriptor);
             });
         }

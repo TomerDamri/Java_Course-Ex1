@@ -103,8 +103,8 @@ public class OrdersCreator {
     private void setDeliveryPrice (SystemStore systemStore, Order newOrder) {
         Location orderLocation = newOrder.getOrderLocation();
         Location storeLocation = systemStore.getLocation();
-        newOrder.setDistanceFromCustomerLocation(GeneratedDataMapper.round(calculateDeliveryDistance(orderLocation.getX() - storeLocation.getX(),
-                                                                           orderLocation.getY() - storeLocation.getY()),2));
+        newOrder.setDistanceFromCustomerLocation(GeneratedDataMapper.round(calculateDeliveryDistance(orderLocation.getX()
+                    - storeLocation.getX(), orderLocation.getY() - storeLocation.getY()), 2));
         double deliveryPrice = newOrder.getDistanceFromCustomerLocation() * systemStore.getDeliveryPpk();
         deliveryPrice = GeneratedDataMapper.round(deliveryPrice, 2);
         newOrder.setDeliveryPrice(deliveryPrice);

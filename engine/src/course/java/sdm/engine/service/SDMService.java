@@ -107,13 +107,16 @@ public class SDMService {
         systemUpdater.updateSystemAfterDynamicOrder(dynamicOrderId, toConfirmNewDynamicOrder, descriptor);
     }
 
-    public void saveSystemToFile (String path) {
-        fileManager.saveSystemToFile(descriptor, path);
+    public void saveOrdersHistoryToFile (String path) {
+        fileManager.saveOrdersHistoryToFile(descriptor, path);
     }
 
     public void loadDataFromFile (String path) {
-        Descriptor descriptor = fileManager.loadDataFromFile(path);
-        this.descriptor = descriptor;
+        SystemOrdersHistory systemOrdersHistory = fileManager.loadDataFromFile(path);
+        Map<Integer, SystemOrder> historySystemOrders = systemOrdersHistory.getSystemOrders();
+        Map<Integer, DynamicOrder> historyDynamicOrders = systemOrdersHistory.getDynamicOrders();
+
+        systemUpdater.updateSystemAfterLoadingOrdersHistoryFromFile(historySystemOrders, historyDynamicOrders, descriptor);
     }
 
     private Order addNewStaticOrder (PlaceOrderRequest request, Map<PricedItem, Double> pricedItems) {
@@ -129,10 +132,10 @@ public class SDMService {
 
     private PlaceDynamicOrderResponse createPlaceDynamicOrderResponse (DynamicOrder dynamicOrder) {
         List<DynamicOrderEntityDTO> dynamicOrderEntityDTOS = dynamicOrder.getStaticOrders()
-                                                          .entrySet()
-                                                          .stream()
-                                                          .map(entry -> createDynamicOrderEntity(entry))
-                                                          .collect(Collectors.toList());
+                                                                         .entrySet()
+                                                                         .stream()
+                                                                         .map(entry -> createDynamicOrderEntity(entry))
+                                                                         .collect(Collectors.toList());
 
         return new PlaceDynamicOrderResponse(dynamicOrder.getOrderId(), dynamicOrderEntityDTOS);
     }

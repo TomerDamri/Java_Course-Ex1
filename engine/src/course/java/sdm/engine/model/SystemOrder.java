@@ -16,6 +16,10 @@ public class SystemOrder implements Serializable {
         this.storeId = storeId;
     }
 
+    public Order getOrder() {
+        return order;
+    }
+
     public Integer getId () {
         return order.getId();
     }
