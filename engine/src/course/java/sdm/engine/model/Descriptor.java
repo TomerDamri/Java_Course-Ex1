@@ -1,6 +1,7 @@
 package course.java.sdm.engine.model;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
@@ -11,7 +12,7 @@ public class Descriptor implements Serializable {
     private static Integer numOfDynamicOrders = 1;
     private Map<Integer, SystemStore> systemStores;
     private Map<Integer, SystemItem> systemItems;
-    private Map<UUID, SystemOrder> systemOrders;
+    private Map<UUID, List<SystemOrder>> systemOrders;
     private Map<UUID, DynamicOrder> dynamicOrders;
 
     public static Integer generateStaticOrderId () {
@@ -41,7 +42,7 @@ public class Descriptor implements Serializable {
         return systemItems;
     }
 
-    public Map<UUID, SystemOrder> getSystemOrders () {
+    public Map<UUID, List<SystemOrder>> getSystemOrders () {
         return systemOrders;
     }
 

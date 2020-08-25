@@ -200,8 +200,16 @@ public class Menu {
     private void handleDisplayOrders () {
         try {
             GetOrdersResponse response = controller.getOrders();
-            if (response.getOrders() != null && !response.getOrders().isEmpty()) {
-                Iterator<OrderDTO> iterator = response.getOrders().values().iterator();
+            if (response.getOrders() == null || response.getOrders().isEmpty()) {
+                System.out.println("No orders have yet been placed");
+                return;
+            }
+
+            response.getOrders().forEach( (key, orders) -> {
+                Iterator<OrderDTO> iterator = orders.iterator();
+                String message = (orders.size() > 1) ? String.format("\nDynamic order id : %s [", key) : "\nStatic Order:";
+                System.out.printf(message);
+
                 while (iterator.hasNext()) {
                     OrderDTO order = iterator.next();
                     System.out.print("\n{" + order + "}");
@@ -209,10 +217,13 @@ public class Menu {
                         System.out.println(",");
                     }
                 }
-            }
-            else {
-                System.out.println("No orders have yet been placed");
-            }
+
+                if (orders.size() > 1) {
+                    System.out.printf("]");
+                }
+                System.out.print("\n\n");
+            });
+
         }
         catch (Exception exception) {
             System.out.println(exception.getMessage());
@@ -258,7 +269,7 @@ public class Menu {
             String userInput = scanner.nextLine();
             if (userInput.equals("Y") || userInput.equals("y")) {
                 controller.completeDynamicOrder(response.getId(), true);
-                System.out.println("Order created successfully");
+                System.out.println("Order created successfully\nOrder id:" + response.getId());
             }
             else {
                 controller.completeDynamicOrder(response.getId(), false);
@@ -601,7 +612,7 @@ public class Menu {
                                            item.getPurchaseCategory(),
                                            itemPrice,
                                            amount,
-                                           itemPrice));
+                                           round(itemPrice * amount, 2)));
             if (iterator.hasNext()) {
                 System.out.println(",");
             }

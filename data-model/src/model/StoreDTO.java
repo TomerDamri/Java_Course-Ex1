@@ -3,7 +3,6 @@ package model;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class StoreDTO {
     private final int id;
@@ -12,7 +11,7 @@ public class StoreDTO {
     private final int xCoordinate;
     private final int yCoordinate;
     private final Map<Integer, StoreItemDTO> items;
-    private final List<UUID> orders;
+    private final List<StoreOrderDTO> orders;
     private final double totalDeliveriesPayment;
 
     public StoreDTO (int id,
@@ -21,7 +20,7 @@ public class StoreDTO {
                      int xCoordinate,
                      int yCoordinate,
                      Map<Integer, StoreItemDTO> items,
-                     List<UUID> orders,
+                     List<StoreOrderDTO> orders,
                      double totalDeliveriesPayment) {
         this.id = id;
         this.name = name;
@@ -57,7 +56,7 @@ public class StoreDTO {
         return items;
     }
 
-    public List<UUID> getOrders () {
+    public List<StoreOrderDTO> getOrders () {
         return orders;
     }
 
@@ -80,6 +79,17 @@ public class StoreDTO {
                 StoreItemDTO item = iterator.next();
                 builder.append("{").append(item.toString()).append("}");
                 if (iterator.hasNext()) {
+                    builder.append(",\n");
+                }
+            }
+            builder.append("]");
+
+            builder.append("\nOrders: [");
+            Iterator<StoreOrderDTO> storeOrderIterator = orders.iterator();
+            while (storeOrderIterator.hasNext()) {
+                StoreOrderDTO storeOrder = storeOrderIterator.next();
+                builder.append("{").append(storeOrder.toString()).append("}");
+                if (storeOrderIterator.hasNext()) {
                     builder.append(",\n");
                 }
             }

@@ -1,8 +1,6 @@
 package course.java.sdm.engine.utils.systemUpdater;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import course.java.sdm.engine.mapper.GeneratedDataMapper;
 import course.java.sdm.engine.model.*;
@@ -23,10 +21,10 @@ public class SystemUpdater {
         return singletonSystemUpdater;
     }
 
-    public void updateSystemAfterLoadingOrdersHistoryFromFile (Map<UUID, SystemOrder> ordersFromHistoryFile,
+    public void updateSystemAfterLoadingOrdersHistoryFromFile (Map<UUID, List<SystemOrder>> ordersFromHistoryFile,
                                                                Map<UUID, DynamicOrder> historyDynamicOrders,
                                                                Descriptor descriptor) {
-        Map<UUID, SystemOrder> systemOrdersBeforeUpdate = descriptor.getSystemOrders();
+        Map<UUID, List<SystemOrder>> systemOrdersBeforeUpdate = descriptor.getSystemOrders();
         Map<UUID, DynamicOrder> dynamicOrdersBeforeUpdate = descriptor.getDynamicOrders();
         Map<Integer, SystemStore> systemStores = descriptor.getSystemStores();
 
@@ -34,20 +32,27 @@ public class SystemUpdater {
         updateDynamicOrdersAccordingToHistoryFile(historyDynamicOrders, dynamicOrdersBeforeUpdate);
     }
 
-    private void updateSystemOrdersAccordingToHistoryFile (Map<UUID, SystemOrder> ordersFromHistoryFile,
+    private void updateSystemOrdersAccordingToHistoryFile (Map<UUID, List<SystemOrder>> ordersFromHistoryFile,
                                                            Descriptor descriptor,
-                                                           Map<UUID, SystemOrder> systemOrdersBeforeUpdate,
+                                                           Map<UUID, List<SystemOrder>> systemOrdersBeforeUpdate,
                                                            Map<Integer, SystemStore> systemStores) {
         ordersFromHistoryFile.entrySet()
                              .stream()
-                             .filter(entry -> !systemOrdersBeforeUpdate.containsKey(entry.getValue().getId()))
-                             .forEach(entry -> {
-                                 Integer storeId = entry.getValue().getStoreId();
-                                 Order order = entry.getValue().getOrder();
-                                 SystemStore systemStore = systemStores.get(storeId);
+                             .filter(entry -> !systemOrdersBeforeUpdate.containsKey(entry.getKey()))
+                             .forEach(entry -> entry.getValue()
+                                                    .forEach(order -> updateSystemAfterLoadingHistoryOrder(descriptor,
+                                                                                                           systemStores,
+                                                                                                           order)));
+    }
 
-                                 updateSystemAfterStaticOrder(systemStore, order, descriptor);
-                             });
+    private void updateSystemAfterLoadingHistoryOrder (Descriptor descriptor,
+                                                       Map<Integer, SystemStore> systemStores,
+                                                       SystemOrder systemOrder) {
+        Integer storeId = systemOrder.getStoreId();
+        Order order = systemOrder.getOrder();
+        SystemStore systemStore = systemStores.get(storeId);
+
+        updateSystemAfterStaticOrder(systemStore, order, descriptor);
     }
 
     private void updateDynamicOrdersAccordingToHistoryFile (Map<UUID, DynamicOrder> historyDynamicOrders,
@@ -67,10 +72,10 @@ public class SystemUpdater {
 
         if (toConfirmNewDynamicOrder) {
             dynamicOrder.setConfirmed(toConfirmNewDynamicOrder);
-            dynamicOrder.getStaticOrders().forEach( (key, value) -> {
-                int storeId = key.getId();
+            dynamicOrder.getStaticOrders().forEach( (storeDetails, order) -> {
+                int storeId = storeDetails.getId();
                 SystemStore systemStore = descriptor.getSystemStores().get(storeId);
-                updateSystemAfterStaticOrder(systemStore, value, descriptor);
+                updateSystemAfterStaticOrder(systemStore, order, descriptor);
             });
         }
         else {
@@ -83,12 +88,28 @@ public class SystemUpdater {
         // add order to store
         systemStore.getOrders().add(newOrder);
         // add order to order collection in descriptor
-        SystemOrder newSystemOrder = new SystemOrder(newOrder, systemStore.getName(), systemStore.getId());
-        descriptor.getSystemOrders().put(newOrder.getId(), newSystemOrder);
+        addNewOrderToSystemOrders(systemStore, newOrder, descriptor);
         // update counter of all store items that was included in order
         updateStoreAfterOrderCompletion(systemStore, newOrder);
         // update counter of all system items that was included in order
         updateSystemItemsAfterOrderCompletion(descriptor.getSystemItems(), newOrder);
+    }
+
+    private void addNewOrderToSystemOrders (SystemStore systemStore, Order newOrder, Descriptor descriptor) {
+        List<SystemOrder> orders;
+        SystemOrder newSystemOrder = new SystemOrder(newOrder, systemStore.getName(), systemStore.getId());
+        UUID id = (newOrder.getParentId() != null) ? newOrder.getParentId() : newOrder.getId();
+        Map<UUID, List<SystemOrder>> systemOrders = descriptor.getSystemOrders();
+
+        if (systemOrders.containsKey(id)) {
+            orders = new ArrayList<>(systemOrders.get(id));
+            orders.add(newSystemOrder);
+        }
+        else {
+            orders = Arrays.asList(newSystemOrder);
+        }
+
+        systemOrders.put(id, orders);
     }
 
     private void updateSystemStore (SystemStore systemStore, Order newOrder) {

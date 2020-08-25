@@ -1,5 +1,6 @@
 package course.java.sdm.engine.mapper;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -28,11 +29,15 @@ public class DTOMapper {
         return new GetItemsResponse(items);
     }
 
-    public GetOrdersResponse toGetOrdersResponse (Map<UUID, SystemOrder> systemOrders) {
-        Map<UUID, OrderDTO> orders = systemOrders.values()
-                                                 .stream()
-                                                 .map(this::toOrderDTO)
-                                                 .collect(Collectors.toMap(OrderDTO::getId, systemItemDTO -> systemItemDTO));
+    public GetOrdersResponse toGetOrdersResponse (Map<UUID, List<SystemOrder>> systemOrders) {
+        Map<UUID, List<OrderDTO>> orders = systemOrders.entrySet()
+                                                       .stream()
+                                                       .collect(Collectors.toMap(Map.Entry::getKey,
+                                                                                 entry -> entry.getValue()
+                                                                                               .stream()
+                                                                                               .map(this::toOrderDTO)
+                                                                                               .collect(Collectors.toList())));
+
         return new GetOrdersResponse(orders);
     }
 
@@ -48,7 +53,7 @@ public class DTOMapper {
                             systemStore.getLocation().getX(),
                             systemStore.getLocation().getY(),
                             items,
-                            systemStore.getOrders().stream().map(Order::getId).collect(Collectors.toList()),
+                            systemStore.getOrders().stream().map(this::toStoreOrderDTO).collect(Collectors.toList()),
                             systemStore.getTotalDeliveriesPayment());
     }
 
@@ -91,5 +96,24 @@ public class DTOMapper {
                             systemOrder.getStoreName(),
                             systemOrder.getStoreId());
 
+    }
+
+    private StoreOrderDTO toStoreOrderDTO (Order order) {
+        Map<PricedItem, Double> pricedItems = order.getPricedItems();
+        Map<Integer, Double> items = pricedItems.keySet()
+                                                .stream()
+                                                .collect(Collectors.toMap(PricedItem::getId, pricedItem -> pricedItems.get(pricedItem)));
+
+        return new StoreOrderDTO(order.getParentId(),
+                                 order.getId(),
+                                 order.getOrderDate(),
+                                 order.getOrderLocation().getX(),
+                                 order.getOrderLocation().getY(),
+                                 items,
+                                 order.getNumOfItemTypes(),
+                                 order.getAmountOfItems(),
+                                 order.getItemsPrice(),
+                                 order.getDeliveryPrice(),
+                                 order.getTotalPrice());
     }
 }

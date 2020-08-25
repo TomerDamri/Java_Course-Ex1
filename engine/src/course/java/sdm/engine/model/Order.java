@@ -8,6 +8,7 @@ import java.util.UUID;
 
 public class Order implements Serializable {
 
+    private final UUID parentId;
     private final UUID id;
     private final LocalDateTime orderDate;
     private final Location orderLocation;
@@ -19,11 +20,16 @@ public class Order implements Serializable {
     private Double distanceFromCustomerLocation;
     private Double totalPrice;
 
-    public Order (LocalDateTime orderDate, Location orderLocation) {
+    public Order (LocalDateTime orderDate, Location orderLocation, UUID parentId) {
         this.id = UUID.randomUUID();
         this.orderDate = orderDate;
         this.orderLocation = orderLocation;
+        this.parentId = parentId;
         this.pricedItems = new HashMap<>();
+    }
+
+    public UUID getParentId () {
+        return parentId;
     }
 
     public Double getTotalPrice () {

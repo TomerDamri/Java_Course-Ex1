@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.UUID;
 
 import course.java.sdm.engine.mapper.GeneratedDataMapper;
 import course.java.sdm.engine.model.*;
@@ -27,9 +28,10 @@ public class OrdersCreator {
     public Order createOrder (SystemStore systemStore,
                               LocalDateTime orderDate,
                               Location orderLocation,
-                              Map<PricedItem, Double> pricedItemToAmountMap) {
+                              Map<PricedItem, Double> pricedItemToAmountMap,
+                              UUID parentId) {
         ORDERS_CREATOR_VALIDATOR.validateLocation(orderLocation, systemStore);
-        Order newOrder = new Order(orderDate, orderLocation);
+        Order newOrder = new Order(orderDate, orderLocation, parentId);
         addItemsToOrder(systemStore, newOrder, pricedItemToAmountMap);
         completeTheOrder(systemStore, newOrder);
 

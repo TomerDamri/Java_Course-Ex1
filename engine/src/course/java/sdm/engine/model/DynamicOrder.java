@@ -6,12 +6,12 @@ import java.util.UUID;
 
 public class DynamicOrder implements Serializable {
 
-    private UUID orderId;
+    private final UUID orderId;
     private boolean isConfirmed;
     private Map<StoreDetails, Order> staticOrders;
 
-    public DynamicOrder (Map<StoreDetails, Order> staticOrders) {
-        this.orderId = UUID.randomUUID();
+    public DynamicOrder (UUID orderId, Map<StoreDetails, Order> staticOrders) {
+        this.orderId = orderId;
         this.staticOrders = staticOrders;
         this.isConfirmed = false;
     }

@@ -89,16 +89,17 @@ public class SDMService {
         Location orderLocation = new Location(request.getxCoordinate(), request.getyCoordinate());
         List<SystemItem> systemItemsIncludedInOrder = getItemsFromDynamicOrderRequest(request.getOrderItemToAmount());
         Set<SystemStore> storesIncludedInOrder = getIncludedStoresInOrder(systemItemsIncludedInOrder);
-
+        UUID dynamicOrderId = UUID.randomUUID();
         Map<StoreDetails, Order> staticOrders = storesIncludedInOrder.stream()
                                                                      .collect(Collectors.toMap(systemStore -> systemStore.getStore()
                                                                                                                          .getStoreDetails(),
                                                                                                createSubOrder(request.getOrderItemToAmount(),
                                                                                                               request.getOrderDate(),
                                                                                                               orderLocation,
-                                                                                                              systemItemsIncludedInOrder)));
+                                                                                                              systemItemsIncludedInOrder,
+                                                                                                              dynamicOrderId)));
 
-        DynamicOrder dynamicOrder = new DynamicOrder(staticOrders);
+        DynamicOrder dynamicOrder = new DynamicOrder(dynamicOrderId, staticOrders);
         descriptor.getDynamicOrders().put(dynamicOrder.getOrderId(), dynamicOrder);
 
         return createPlaceDynamicOrderResponse(dynamicOrder);
@@ -114,7 +115,7 @@ public class SDMService {
 
     public void loadDataFromFile (String path) {
         SystemOrdersHistory systemOrdersHistory = fileManager.loadDataFromFile(path);
-        Map<UUID, SystemOrder> historySystemOrders = systemOrdersHistory.getSystemOrders();
+        Map<UUID, List<SystemOrder>> historySystemOrders = systemOrdersHistory.getSystemOrders();
         Map<UUID, DynamicOrder> historyDynamicOrders = systemOrdersHistory.getDynamicOrders();
 
         systemUpdater.updateSystemAfterLoadingOrdersHistoryFromFile(historySystemOrders, historyDynamicOrders, descriptor);
@@ -125,7 +126,7 @@ public class SDMService {
         LocalDateTime orderDate = request.getOrderDate();
         Location orderLocation = new Location(request.getxCoordinate(), request.getyCoordinate());
 
-        Order newOrder = ordersCreator.createOrder(systemStore, orderDate, orderLocation, pricedItems);
+        Order newOrder = ordersCreator.createOrder(systemStore, orderDate, orderLocation, pricedItems, null);
         systemUpdater.updateSystemAfterStaticOrder(systemStore, newOrder, descriptor);
 
         return newOrder;
@@ -159,13 +160,14 @@ public class SDMService {
     private Function<SystemStore, Order> createSubOrder (Map<Integer, Double> orderItemToAmount,
                                                          LocalDateTime orderDate,
                                                          Location orderLocation,
-                                                         List<SystemItem> systemItemsIncludedInOrder) {
+                                                         List<SystemItem> systemItemsIncludedInOrder,
+                                                         UUID parentId) {
         return systemStore -> {
             Map<PricedItem, Double> pricedItems = getPricedItemFromDynamicOrderRequest(orderItemToAmount,
                                                                                        systemItemsIncludedInOrder,
                                                                                        systemStore);
 
-            return ordersCreator.createOrder(systemStore, orderDate, orderLocation, pricedItems);
+            return ordersCreator.createOrder(systemStore, orderDate, orderLocation, pricedItems, parentId);
         };
     }
 

@@ -4,9 +4,8 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 
-public class OrderDTO {
-
-    private StoreOrderDTO storeOrderDTO;
+public class StoreOrderDTO {
+    private UUID parentId;
     private UUID id;
     private LocalDateTime orderDate;
     private int xCoordinate;
@@ -17,21 +16,19 @@ public class OrderDTO {
     private Double itemsPrice;
     private Double deliveryPrice;
     private Double totalPrice;
-    private String storeName;
-    private Integer storeId;
 
-    public OrderDTO (UUID id,
-                     LocalDateTime orderDate,
-                     int xCoordinate,
-                     int yCoordinate,
-                     Map<Integer, Double> pricedItems,
-                     Integer numOfItemTypes,
-                     Integer amountOfItems,
-                     Double itemsPrice,
-                     Double deliveryPrice,
-                     Double totalPrice,
-                     String storeName,
-                     Integer storeId) {
+    public StoreOrderDTO (UUID parentId,
+                          UUID id,
+                          LocalDateTime orderDate,
+                          int xCoordinate,
+                          int yCoordinate,
+                          Map<Integer, Double> pricedItems,
+                          Integer numOfItemTypes,
+                          Integer amountOfItems,
+                          Double itemsPrice,
+                          Double deliveryPrice,
+                          Double totalPrice) {
+        this.parentId = parentId;
         this.id = id;
         this.orderDate = orderDate;
         this.xCoordinate = xCoordinate;
@@ -42,8 +39,6 @@ public class OrderDTO {
         this.itemsPrice = itemsPrice;
         this.deliveryPrice = deliveryPrice;
         this.totalPrice = totalPrice;
-        this.storeName = storeName;
-        this.storeId = storeId;
     }
 
     public UUID getId () {
@@ -86,17 +81,11 @@ public class OrderDTO {
         return totalPrice;
     }
 
-    public String getStoreName () {
-        return storeName;
-    }
-
-    public Integer getStoreId () {
-        return storeId;
-    }
-
     @Override
     public String toString () {
-        return new StringBuilder().append("Order id: ")
+        String parentOrderIdStr = parentId != null ? String.format("\nParent order id: %s", parentId) : "";
+        return new StringBuilder().append(parentOrderIdStr)
+                                  .append("\nOrder id: ")
                                   .append(id)
                                   .append(",\nDate: ")
                                   .append(orderDate)
@@ -110,11 +99,6 @@ public class OrderDTO {
                                   .append(deliveryPrice)
                                   .append(",\nTotal price of the order: ")
                                   .append(totalPrice)
-                                  .append(",\nStore id: ")
-                                  .append(storeId)
-                                  .append(",\nStore Name: ")
-                                  .append(storeName)
                                   .toString();
     }
-
 }
