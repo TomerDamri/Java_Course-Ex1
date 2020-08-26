@@ -123,7 +123,7 @@ public class Menu {
             System.out.println("System data loaded from file successfully");
         }
         catch (Exception e) {
-            System.out.println("Failed saving to file.\n" + e.getMessage());
+            System.out.println("Failed loading from file.\nError message : " + e.getMessage());
         }
     }
 

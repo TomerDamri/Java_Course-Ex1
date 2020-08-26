@@ -92,10 +92,10 @@ public class FileManager {
         catch (ClassNotFoundException ex) {
             throw new FileNotLoadedException(String.format("Failed to load file : %s because the class %s not found",
                                                            path,
-                                                           Descriptor.class.getSimpleName()));
+                                                           SystemOrdersHistory.class.getSimpleName()));
         }
         catch (IOException ex) {
-            throw new FileNotLoadedException(String.format("Failed to load file : %s.\nError message: %s ", path, ex.getMessage()));
+            throw new FileNotLoadedException(ex.getMessage());
         }
     }
 

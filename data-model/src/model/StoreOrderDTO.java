@@ -83,7 +83,7 @@ public class StoreOrderDTO {
 
     @Override
     public String toString () {
-        String parentOrderIdStr = parentId != null ? String.format("\nParent order id: %s", parentId) : "";
+        String parentOrderIdStr = parentId != null ? String.format("\nParent order id: %s,", parentId) : "";
         return new StringBuilder().append(parentOrderIdStr)
                                   .append("\nOrder id: ")
                                   .append(id)
